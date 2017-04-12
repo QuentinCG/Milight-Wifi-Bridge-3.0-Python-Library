@@ -13,7 +13,8 @@
     - Link/Unlink lights
     - Light on/off
     - Wifi bridge lamp on/off
-    - Night light on
+    - Set night mode
+    - Set white mode
     - Set color
     - Set saturation
     - Set brightness
