@@ -39,7 +39,7 @@ Non-exhaustive list of shell commands:
 
 ## How to install (python script and shell)
 
-  - Connect your Milight 3.0 wifi bridge to your wifi network (install the android app and follow the instruction: https://play.google.com/store/apps/details?id=com.irainxun.wifilight&hl=fr)
+  - Connect your Milight 3.0 wifi bridge to your wifi network (install the android app and follow the instruction: https://play.google.com/store/apps/details?id=com.irainxun.wifilight)
   - Get IP address and port of the wifi bridge (you can for example use this software to help you: http://www.limitlessled.com/download/LimitlessLEDv4.zip)
   - Load your shell or python script
 
