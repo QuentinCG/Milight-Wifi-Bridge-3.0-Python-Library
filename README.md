@@ -97,7 +97,7 @@ MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setTemperature 50
 # Set disco mode
 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setDiscoMode 5
 
-# Combined commands: Turn ON ALL lights (zone 0) with white mode and a brightness of 50% and a saturation of 50%
+# Combined commands: Turn ON ALL lights (zone 0) with white mode, a brightness of 50% and a saturation of 50%
 MilightWifiBridge.py --ip 192.168.1.23 --zone 0 --turnOn --setWhiteMode --setBrightness 50 --setSaturation 50
 ```
 
