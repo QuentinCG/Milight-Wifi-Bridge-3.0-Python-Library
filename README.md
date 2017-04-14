@@ -56,7 +56,7 @@ MilightWifiBridge.py --help
 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --link
 
 # Unlink bulbs to a specific zone (light on the bulbs max 3sec before calling this command)
-MilightWifiBridge.py --ip 192.168.1.23 --unlink
+MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --unlink
 
 # Turn lights ON
 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --turnOn
@@ -135,7 +135,7 @@ if macAddress != "":
 print("Link bulbs to zone {}: {}".format(str(_zoneId), str(milight.link(zoneId=_zoneId))))
 
 # Unlink bulbs
-print("Unlink bulbs: {}".format(str(milight.link(zoneId=_zoneId))))
+print("Unlink bulbs of zone {}: {}".format(str(_zoneId), str(milight.unlink(zoneId=_zoneId))))
 
 # Turn on bulbs in specific zone
 print("Turn on bulbs in zone {}: {}".format(str(_zoneId), str(milight.turnOn(zoneId=_zoneId))))
