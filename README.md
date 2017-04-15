@@ -15,7 +15,8 @@ Non-exhaustive list of MilightWifiBridge class functionalities:
   - Link/Unlink lights
   - Light on/off
   - Wifi bridge lamp on/off
-  - Night light on
+  - Set night light mode
+  - Set white light mode (default light)
   - Set color
   - Set saturation
   - Set brightness
@@ -27,7 +28,8 @@ Non-exhaustive list of shell commands:
   - Link/Unlink lights
   - Light on/off
   - Wifi bridge lamp on/off
-  - Night light on
+  - Set night light mode
+  - Set white light mode (default light)
   - Set color
   - Set saturation
   - Set brightness
