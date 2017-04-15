@@ -170,10 +170,10 @@ print("Slow down disco mode in zone {}: {}".format(str(_zoneId), str(milight.slo
 print("Set color {} in zone {}: {}".format(str(_color), str(_zoneId), str(milight.setColor(color=_color, zoneId=_zoneId))))
 
 # Set specific brightness in specific zone
-print("Set brightness {} in zone {}: {}".format(str(_brightness), str(_zoneId), str(milight.setBrightness(color=_brightness, zoneId=_zoneId))))
+print("Set brightness {} in zone {}: {}".format(str(_brightness), str(_zoneId), str(milight.setBrightness(brightness=_brightness, zoneId=_zoneId))))
 
 # Set specific saturation in specific zone
-print("Set saturation {} in zone {}: {}".format(str(_saturation), str(_zoneId), str(milight.setSaturation(color=_saturation, zoneId=_zoneId))))
+print("Set saturation {} in zone {}: {}".format(str(_saturation), str(_zoneId), str(milight.setSaturation(saturation=_saturation, zoneId=_zoneId))))
 
 # Set specific temperature in specific zone
 print("Set temperature {} in zone {}: {}".format(str(_temperature), str(_zoneId), str(milight.setTemperature(temperature=_temperature, zoneId=_zoneId))))
