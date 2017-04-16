@@ -38,6 +38,7 @@ import time
 import collections
 import sys, getopt
 import logging
+import binascii
 
 class MilightWifiBridge:
   """Milight 3.0 Wifi Bridge class
@@ -72,7 +73,7 @@ class MilightWifiBridge:
 
 
   ######################### static variables/static functions/internal struct #########################
-  __START_SESSION_MSG = bytes([0x20, 0x00, 0x00, 0x00, 0x16, 0x02, 0x62, 0x3A, 0xD5, 0xED, 0xA3, 0x01, 0xAE, 0x08,
+  __START_SESSION_MSG = bytearray([0x20, 0x00, 0x00, 0x00, 0x16, 0x02, 0x62, 0x3A, 0xD5, 0xED, 0xA3, 0x01, 0xAE, 0x08,
                                0x2D, 0x46, 0x61, 0x41, 0xA7, 0xF6, 0xDC, 0xAF, 0xD3, 0xE6, 0x00, 0x00, 0x1E])
 
   # Response sent by the milight wifi bridge after a start session query
@@ -84,17 +85,17 @@ class MilightWifiBridge:
   #   sequenceNumber -- (int) Sequence number
   __START_SESSION_RESPONSE = collections.namedtuple("StartSessionResponse", "responseReceived mac sessionId1 sessionId2")
 
-  __ON_CMD = bytes([0x31, 0x00, 0x00, 0x08, 0x04, 0x01, 0x00, 0x00, 0x00])
-  __OFF_CMD = bytes([0x31, 0x00, 0x00, 0x08, 0x04, 0x02, 0x00, 0x00, 0x00])
-  __NIGHT_MODE_CMD = bytes([0x31, 0x00, 0x00, 0x08, 0x04, 0x05, 0x00, 0x00, 0x00])
-  __WHITE_MODE_CMD = bytes([0x31, 0x00, 0x00, 0x08, 0x05, 0x64, 0x00, 0x00, 0x00])
-  __DISCO_MODE_SPEED_UP_CMD = bytes([0x31, 0x00, 0x00, 0x08, 0x04, 0x03, 0x00, 0x00, 0x00])
-  __DISCO_MODE_SLOW_DOWN_CMD = bytes([0x31, 0x00, 0x00, 0x08, 0x04, 0x04, 0x00, 0x00, 0x00])
-  __LINK_CMD = bytes([0x3D, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00])
-  __UNLINK_CMD = bytes([0x3E, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00])
+  __ON_CMD = bytearray([0x31, 0x00, 0x00, 0x08, 0x04, 0x01, 0x00, 0x00, 0x00])
+  __OFF_CMD = bytearray([0x31, 0x00, 0x00, 0x08, 0x04, 0x02, 0x00, 0x00, 0x00])
+  __NIGHT_MODE_CMD = bytearray([0x31, 0x00, 0x00, 0x08, 0x04, 0x05, 0x00, 0x00, 0x00])
+  __WHITE_MODE_CMD = bytearray([0x31, 0x00, 0x00, 0x08, 0x05, 0x64, 0x00, 0x00, 0x00])
+  __DISCO_MODE_SPEED_UP_CMD = bytearray([0x31, 0x00, 0x00, 0x08, 0x04, 0x03, 0x00, 0x00, 0x00])
+  __DISCO_MODE_SLOW_DOWN_CMD = bytearray([0x31, 0x00, 0x00, 0x08, 0x04, 0x04, 0x00, 0x00, 0x00])
+  __LINK_CMD = bytearray([0x3D, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00])
+  __UNLINK_CMD = bytearray([0x3E, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00])
 
-  __WIFI_BRIDGE_LAMP_ON_CMD = bytes([0x31, 0x00, 0x00, 0x00, 0x03, 0x03, 0x00, 0x00, 0x00])
-  __WIFI_BRIDGE_LAMP_OFF_CMD = bytes([0x31, 0x00, 0x00, 0x00, 0x03, 0x04, 0x00, 0x00, 0x00])
+  __WIFI_BRIDGE_LAMP_ON_CMD = bytearray([0x31, 0x00, 0x00, 0x00, 0x03, 0x03, 0x00, 0x00, 0x00])
+  __WIFI_BRIDGE_LAMP_OFF_CMD = bytearray([0x31, 0x00, 0x00, 0x00, 0x03, 0x04, 0x00, 0x00, 0x00])
 
 
   @staticmethod
@@ -106,10 +107,10 @@ class MilightWifiBridge:
                      examples: 0xFF = Red, 0xD9 = Lavender, 0xBA = Blue, 0x85 = Aqua,
                                0x7A = Green, 0x54 = Lime, 0x3B = Yellow, 0x1E = Orange
 
-    return: (bytes) 'Set color' command
+    return: (bytearray) 'Set color' command
     """
     color = int(color) & 0xFF
-    return bytes([0x31, 0x00, 0x00, 0x08, 0x01, color, color, color, color])
+    return bytearray([0x31, 0x00, 0x00, 0x08, 0x01, color, color, color, color])
 
   @staticmethod
   def __getSetDiscoModeCmd(mode):
@@ -118,7 +119,7 @@ class MilightWifiBridge:
     Keyword arguments:
       mode -- (int) Disco mode between 1 and 9
 
-    return: (bytes) 'Set disco mode' command
+    return: (bytearray) 'Set disco mode' command
     """
     mode = int(mode) & 0xFF
     if mode < 1:
@@ -126,7 +127,7 @@ class MilightWifiBridge:
     elif mode > 9:
       mode = 9
 
-    return bytes([0x31, 0x00, 0x00, 0x08, 0x06, mode, 0x00, 0x00, 0x00])
+    return bytearray([0x31, 0x00, 0x00, 0x08, 0x06, mode, 0x00, 0x00, 0x00])
 
   @staticmethod
   def __getSetBrightnessCmd(brightness):
@@ -135,7 +136,7 @@ class MilightWifiBridge:
     Keyword arguments:
       brightness -- (int) Brightness percentage between 0 and 100
 
-    return: (bytes) 'Set brightness' command
+    return: (bytearray) 'Set brightness' command
     """
     brightness = int(brightness) & 0xFF
     if brightness < 0:
@@ -143,7 +144,7 @@ class MilightWifiBridge:
     elif brightness > 100:
       brightness = 100
 
-    return bytes([0x31, 0x00, 0x00, 0x08, 0x03, brightness, 0x00, 0x00, 0x00])
+    return bytearray([0x31, 0x00, 0x00, 0x08, 0x03, brightness, 0x00, 0x00, 0x00])
 
   @staticmethod
   def __getSetSaturationCmd(saturation):
@@ -152,7 +153,7 @@ class MilightWifiBridge:
     Keyword arguments:
       saturation -- (int) Saturation percentage between 0 and 100
 
-    return: (bytes) 'Set saturation' command
+    return: (bytearray) 'Set saturation' command
     """
     saturation = int(saturation) & 0xFF
     if saturation < 0:
@@ -160,7 +161,7 @@ class MilightWifiBridge:
     elif saturation > 100:
       saturation = 100
 
-    return bytes([0x31, 0x00, 0x00, 0x08, 0x02, saturation, 0x00, 0x00, 0x00])
+    return bytearray([0x31, 0x00, 0x00, 0x08, 0x02, saturation, 0x00, 0x00, 0x00])
 
   @staticmethod
   def __getSetTemperatureCmd(temperature):
@@ -171,7 +172,7 @@ class MilightWifiBridge:
                            0% <=> Warm white (2700K)
                            100% <=> Cool white (6500K)
 
-    return: (bytes) 'Set temperature' command
+    return: (bytearray) 'Set temperature' command
     """
     temperature = int(temperature) & 0xFF
     if temperature < 0:
@@ -179,7 +180,7 @@ class MilightWifiBridge:
     elif temperature > 100:
       temperature = 100
 
-    return bytes([0x31, 0x00, 0x00, 0x08, 0x05, temperature, 0x00, 0x00, 0x00])
+    return bytearray([0x31, 0x00, 0x00, 0x08, 0x05, temperature, 0x00, 0x00, 0x00])
 
   @staticmethod
   def __calculateCheckSum(command, zoneId):
@@ -188,7 +189,7 @@ class MilightWifiBridge:
     Note: Request checksum is equal to SUM(all command bytes and of the zone number) & 0xFF
 
     Keyword arguments:
-      command -- (bytes) Command
+      command -- (bytearray) Command
       zoneId -- (int) Zone ID
 
     return: (int) Request checksum
@@ -258,7 +259,10 @@ class MilightWifiBridge:
                                                          mac address and session IDs
     """
     # Send start session request
-    self.__sock.sendto(MilightWifiBridge.__START_SESSION_MSG, (self.__ip, self.__port))
+    data_to_send = MilightWifiBridge.__START_SESSION_MSG
+    logging.debug("Sending frame '{}' to {}:{}".format(str(binascii.hexlify(data_to_send)),
+                                                     str(self.__ip), str(self.__port)))
+    self.__sock.sendto(data_to_send, (self.__ip, self.__port))
     response = MilightWifiBridge.__START_SESSION_RESPONSE(responseReceived=False, mac="", sessionId1=-1, sessionId2=-1)
 
     try:
@@ -288,7 +292,7 @@ class MilightWifiBridge:
     """Send command to a specific zone and get response (ACK from the wifi bridge)
 
     Keyword arguments:
-      command -- (bytes) Command
+      command -- (bytearray) Command
       zoneId -- (int) Zone ID
 
     return: (bool) Request received by the wifi bridge
@@ -296,7 +300,7 @@ class MilightWifiBridge:
     returnValue = False
 
     # Send request only if valid parameters
-    if len(bytes(command)) == 9:
+    if len(bytearray(command)) == 9:
       if int(zoneId) >= 0 and int(zoneId) <= 4:
         startSessionResponse = self.__startSession()
         if startSessionResponse.responseReceived:
@@ -307,15 +311,16 @@ class MilightWifiBridge:
             self.__sequence_number = 1
 
           # Prepare request frame to send
-          bytesToSend = bytes([0x80, 0x00, 0x00, 0x00, 0x11, startSessionResponse.sessionId1,
-                               startSessionResponse.sessionId2, 0x00, int(self.__sequence_number), 0x00])
-          bytesToSend += bytes(command)
-          bytesToSend += bytes([int(zoneId), 0x00])
-          bytesToSend += bytes([int(MilightWifiBridge.__calculateCheckSum(bytes(command), int(zoneId)))])
+          bytesToSend = bytearray([0x80, 0x00, 0x00, 0x00, 0x11, startSessionResponse.sessionId1,
+                                   startSessionResponse.sessionId2, 0x00, int(self.__sequence_number), 0x00])
+          bytesToSend += bytearray(command)
+          bytesToSend += bytearray([int(zoneId), 0x00])
+          bytesToSend += bytearray([int(MilightWifiBridge.__calculateCheckSum(bytearray(command), int(zoneId)))])
 
           # Send request frame
           logging.debug("Sending request with command '{}' with session ID 1 '{}', session ID 2 '{}' and sequence number '{}'"
-                        .format(str(command), str(startSessionResponse.sessionId1), str(startSessionResponse.sessionId2), str(self.__sequence_number)))
+                        .format(str(binascii.hexlify(command)), str(startSessionResponse.sessionId1),
+                                str(startSessionResponse.sessionId2), str(self.__sequence_number)))
           self.__sock.sendto(bytesToSend, (self.__ip, self.__port))
           try:
             # Receive response frame
@@ -336,7 +341,7 @@ class MilightWifiBridge:
       else:
         logging.error("Invalid zone {} (must be between 0 and 4)".format(str(zoneId)))
     else:
-      logging.error("Invalid command size {} instead of 9".format(str(len(bytes(command)))))
+      logging.error("Invalid command size {} instead of 9".format(str(len(bytearray(command)))))
 
     return returnValue
 
