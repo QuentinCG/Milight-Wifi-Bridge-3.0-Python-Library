@@ -29,7 +29,7 @@ __author__ = 'Quentin Comte-Gaz'
 __email__ = "quentin@comte-gaz.com"
 __license__ = "MIT License"
 __copyright__ = "Copyright Quentin Comte-Gaz (2017)"
-__python_version__ = "2.7+ and 3.+"
+__python_version__ = "3.+"
 __version__ = "1.0 (2017/04/10)"
 __status__ = "Usable for any project"
 

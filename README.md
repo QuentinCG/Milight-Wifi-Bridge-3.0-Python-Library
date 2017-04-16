@@ -4,7 +4,7 @@
 
 This python library is designed to be integrated in python or shell projects using any Milight 3.0 bulbs and wifi bridge (with protocol LimitlessLED Wifi Bridge v6.0).
 
-It is multi-platform and compatible with python 2.7+ and 3+.
+It is multi-platform and compatible with python 3+.
 
 <img src="milight.jpg" width="800">
 
