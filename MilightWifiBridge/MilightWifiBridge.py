@@ -96,7 +96,23 @@ class MilightWifiBridge:
 
   __WIFI_BRIDGE_LAMP_ON_CMD = bytearray([0x31, 0x00, 0x00, 0x00, 0x03, 0x03, 0x00, 0x00, 0x00])
   __WIFI_BRIDGE_LAMP_OFF_CMD = bytearray([0x31, 0x00, 0x00, 0x00, 0x03, 0x04, 0x00, 0x00, 0x00])
+  __WIFI_BRIDGE_LAMP_WHITE_MODE_CMD = bytearray([0x31, 0x00, 0x00, 0x00, 0x03, 0x05, 0x00, 0x00, 0x00])
+  __WIFI_BRIDGE_LAMP_DISCO_MODE_SPEED_UP_CMD = bytearray([0x31, 0x00, 0x00, 0x00, 0x03, 0x02, 0x00, 0x00, 0x00])
+  __WIFI_BRIDGE_LAMP_DISCO_MODE_SLOW_DOWN_CMD = bytearray([0x31, 0x00, 0x00, 0x00, 0x03, 0x01, 0x00, 0x00, 0x00])
 
+  @staticmethod
+  def __getSetBridgeLampColorCmd(color):
+    """Give 'Set color for bridge lamp' command
+
+    Keyword arguments:
+      color -- (int) Color value between 0x00 and 0xFF
+                     examples: 0xFF = Red, 0xD9 = Lavender, 0xBA = Blue, 0x85 = Aqua,
+                               0x7A = Green, 0x54 = Lime, 0x3B = Yellow, 0x1E = Orange
+
+    return: (bytearray) 'Set colo for bridge lamp' command
+    """
+    color = int(color) & 0xFF
+    return bytearray([0x31, 0x00, 0x00, 0x00, 0x01, color, color, color, color])
 
   @staticmethod
   def __getSetColorCmd(color):
@@ -111,6 +127,23 @@ class MilightWifiBridge:
     """
     color = int(color) & 0xFF
     return bytearray([0x31, 0x00, 0x00, 0x08, 0x01, color, color, color, color])
+
+  @staticmethod
+  def __getSetDiscoModeForBridgeLampCmd(mode):
+    """Give 'Set disco mode for bridge lamp' command
+
+    Keyword arguments:
+      mode -- (int) Disco mode between 1 and 9
+
+    return: (bytearray) 'Set disco mode for bridge lamp' command
+    """
+    mode = int(mode) & 0xFF
+    if mode < 1:
+      mode = 1
+    elif mode > 9:
+      mode = 9
+
+    return bytearray([0x31, 0x00, 0x00, 0x00, 0x04, mode, 0x00, 0x00, 0x00])
 
   @staticmethod
   def __getSetDiscoModeCmd(mode):
@@ -128,6 +161,23 @@ class MilightWifiBridge:
       mode = 9
 
     return bytearray([0x31, 0x00, 0x00, 0x08, 0x06, mode, 0x00, 0x00, 0x00])
+
+  @staticmethod
+  def __getSetBrightnessForBridgeLampCmd(brightness):
+    """Give 'Set brightness for bridge lamp' command
+
+    Keyword arguments:
+      brightness -- (int) Brightness percentage between 0 and 100
+
+    return: (bytearray) 'Set brightness for bridge lamp' command
+    """
+    brightness = int(brightness) & 0xFF
+    if brightness < 0:
+      brightness = 0
+    elif brightness > 100:
+      brightness = 100
+
+    return bytearray([0x31, 0x00, 0x00, 0x00, 0x02, brightness, 0x00, 0x00, 0x00])
 
   @staticmethod
   def __getSetBrightnessCmd(brightness):
@@ -413,6 +463,15 @@ class MilightWifiBridge:
     logging.debug("Set white mode to zone {}: {}".format(str(zoneId), str(returnValue)))
     return returnValue
 
+  def setWhiteModeBridgeLamp(self):
+    """Request 'White mode' to the bridge lamp
+
+    return: (bool) Request received by the wifi bridge
+    """
+    returnValue = self.__sendRequest(MilightWifiBridge.__WIFI_BRIDGE_LAMP_WHITE_MODE_CMD, 0x01)
+    logging.debug("Set white mode to wifi bridge: {}".format(str(returnValue)))
+    return returnValue
+
   def setDiscoMode(self, discoMode, zoneId):
     """Request 'Set disco mode' to a zone
 
@@ -424,6 +483,18 @@ class MilightWifiBridge:
     """
     returnValue = self.__sendRequest(MilightWifiBridge.__getSetDiscoModeCmd(discoMode), zoneId)
     logging.debug("Set disco mode {} to zone {}: {}".format(str(discoMode), str(zoneId), str(returnValue)))
+    return returnValue
+
+  def setDiscoModeBridgeLamp(self, discoMode):
+    """Request 'Set disco mode' to the bridge lamp
+
+    Keyword arguments:
+      discoMode -- (int or MilightWifiBridge.eDiscoMode) Disco mode (9 modes available)
+
+    return: (bool) Request received by the wifi bridge
+    """
+    returnValue = self.__sendRequest(MilightWifiBridge.__getSetDiscoModeForBridgeLampCmd(discoMode), 0x01)
+    logging.debug("Set disco mode {} to wifi bridge: {}".format(str(discoMode), str(returnValue)))
     return returnValue
 
   def speedUpDiscoMode(self, zoneId):
@@ -438,6 +509,15 @@ class MilightWifiBridge:
     logging.debug("Speed up disco mode to zone {}: {}".format(str(zoneId), str(returnValue)))
     return returnValue
 
+  def speedUpDiscoModeBridgeLamp(self):
+    """Request 'Disco mode speed up' to the wifi bridge
+
+    return: (bool) Request received by the wifi bridge
+    """
+    returnValue = self.__sendRequest(MilightWifiBridge.__WIFI_BRIDGE_LAMP_DISCO_MODE_SPEED_UP_CMD, 0x01)
+    logging.debug("Speed up disco mode to wifi bridge: {}".format(str(returnValue)))
+    return returnValue
+
   def slowDownDiscoMode(self, zoneId):
     """Request 'Disco mode slow down' to a zone
 
@@ -448,6 +528,18 @@ class MilightWifiBridge:
     """
     returnValue = self.__sendRequest(MilightWifiBridge.__DISCO_MODE_SLOW_DOWN_CMD, zoneId)
     logging.debug("Slow down disco mode to zone {}: {}".format(str(zoneId), str(returnValue)))
+    return returnValue
+
+  def slowDownDiscoModeBridgeLamp(self):
+    """Request 'Disco mode slow down' to wifi bridge
+
+    Keyword arguments:
+      zoneId -- (int or MilightWifiBridge.eZone) Zone ID
+
+    return: (bool) Request received by the wifi bridge
+    """
+    returnValue = self.__sendRequest(MilightWifiBridge.__WIFI_BRIDGE_LAMP_DISCO_MODE_SLOW_DOWN_CMD, 0x01)
+    logging.debug("Slow down disco mode to wifi bridge: {}".format(str(returnValue)))
     return returnValue
 
   def link(self, zoneId):
@@ -489,6 +581,20 @@ class MilightWifiBridge:
     logging.debug("Set color {} to zone {}: {}".format(str(color), str(zoneId), str(returnValue)))
     return returnValue
 
+  def setColorBridgeLamp(self, color):
+    """Request 'Set color' to wifi bridge
+
+    Keyword arguments:
+      color -- (int) Color (between 0x00 and 0xFF)
+                     examples: 0xFF = Red, 0xD9 = Lavender, 0xBA = Blue, 0x85 = Aqua,
+                               0x7A = Green, 0x54 = Lime, 0x3B = Yellow, 0x1E = Orange
+
+    return: (bool) Request received by the wifi bridge
+    """
+    returnValue = self.__sendRequest(MilightWifiBridge.__getSetBridgeLampColorCmd(color), 0x01)
+    logging.debug("Set color {} to wifi bridge: {}".format(str(color), str(returnValue)))
+    return returnValue
+
   def setBrightness(self, brightness, zoneId):
     """Request 'Set brightness' to a zone
 
@@ -500,6 +606,18 @@ class MilightWifiBridge:
     """
     returnValue = self.__sendRequest(MilightWifiBridge.__getSetBrightnessCmd(brightness), zoneId)
     logging.debug("Set brightness {}% to zone {}: {}".format(str(brightness), str(zoneId), str(returnValue)))
+    return returnValue
+
+  def setBrightnessBridgeLamp(self, brightness):
+    """Request 'Set brightness' to the wifi bridge
+
+    Keyword arguments:
+      brightness -- (int) Brightness in percentage (between 0 and 100)
+
+    return: (bool) Request received by the wifi bridge
+    """
+    returnValue = self.__sendRequest(MilightWifiBridge.__getSetBrightnessForBridgeLampCmd(brightness), 0x01)
+    logging.debug("Set brightness {}% to the wifi bridge: {}".format(str(brightness), str(returnValue)))
     return returnValue
 
   def setSaturation(self, saturation, zoneId):
@@ -736,6 +854,39 @@ def __help(func="", filename=__file__):
   elif func == "":
     print("SET WHITE MODE (-w, --setWhiteMode): Set white mode")
 
+  # Set white mode for bridge lamp
+  if func in ("j", "setwhitemodebridgelamp"):
+    print("Set white mode\r\n"
+          +"\r\n"
+          +"Usage:\r\n"
+          +filename+" --ip 192.168.1.23 -j\r\n"
+          +filename+" --ip 192.168.1.23 --setWhiteModeBridgeLamp\r\n")
+    return
+  elif func == "":
+    print("SET WHITE MODE ON BRIDGE LAMP (-j, --setWhiteModeBridgeLamp): Set white mode on bridge lamp")
+
+  # Speed up disco mode for bridge lamp
+  if func in ("k", "speedupdiscomodebridgelamp"):
+    print("Speed up disco mode for bridge lamp\r\n"
+          +"\r\n"
+          +"Usage:\r\n"
+          +filename+" --ip 192.168.1.23 -k\r\n"
+          +filename+" --ip 192.168.1.23 --speedUpDiscoModeBridgeLamp\r\n")
+    return
+  elif func == "":
+    print("SPEED UP DISCO MODE FOR BRIDGE LAMP (-k, --speedUpDiscoModeBridgeLamp): Speed up disco mode for bridge lamp")
+
+  # Slow down disco mode for bridge lamp
+  if func in ("q", "slowdowndiscomodebridgelamp"):
+    print("Slow down disco mode for bridge lamp\r\n"
+          +"\r\n"
+          +"Usage:\r\n"
+          +filename+" --ip 192.168.1.23 -q\r\n"
+          +filename+" --ip 192.168.1.23 --slowDownDiscoModeBridgeLamp\r\n")
+    return
+  elif func == "":
+    print("SLOW DOWN DISCO MODE FOR BRIDGE LAMP (-q, --slowDownDiscoModeBridgeLamp): Slow down disco mode for bridge lamp")
+
   # Speed up disco mode
   if func in ("a", "speedupdiscomode"):
     print("Speed up disco mode\r\n"
@@ -780,6 +931,28 @@ def __help(func="", filename=__file__):
   elif func == "":
     print("SET BRIGHTNESS (-b, --setBrightness): Set brightness (in %)")
 
+  # Set specific color for bridge lamp
+  if func in ("r", "setcolorbridgelamp"):
+    print("Set specific color for the bridge lamp (between 0 and 255)\r\n"
+          +"\r\n"
+          +"Usage:\r\n"
+          +filename+" --ip 192.168.1.23 -r 255\r\n"
+          +filename+" --ip 192.168.1.23 --setColorBridgeLamp 255\r\n")
+    return
+  elif func == "":
+    print("SET COLOR FOR THE BRIDGE LAMP (-r, --setColorBridgeLamp): Set specific color for the bridge lamp (between 0 and 255)")
+
+  # Set brightness for bridge lamp
+  if func in ("v", "setbrightnessbridgelamp"):
+    print("Set brightness for the bridge lamp (in %)\r\n"
+          +"\r\n"
+          +"Usage:\r\n"
+          +filename+" --ip 192.168.1.23 -v 50\r\n"
+          +filename+" --ip 192.168.1.23 --setBrightnessBridgeLamp 50\r\n")
+    return
+  elif func == "":
+    print("SET BRIGHTNESS FOR THE BRIDGE LAMP (-v, --setBrightnessBridgeLamp): Set brightness for the bridge lamp(in %)")
+
   # Set saturation
   if func in ("s", "setsaturation"):
     print("Set saturation (in %)\r\n"
@@ -813,6 +986,17 @@ def __help(func="", filename=__file__):
   elif func == "":
     print("SET DISCO MODE (-d, --setDiscoMode): Set disco mode (between 1 and 9)")
 
+  # Set disco mode for bridge lamp
+  if func in ("d", "setdiscomodebridgelamp"):
+    print("Set disco mode for bridge lamp (between 1 and 9)\r\n"
+          +"\r\n"
+          +"Usage:\r\n"
+          +filename+" --ip 192.168.1.23 -1 5\r\n"
+          +filename+" --ip 192.168.1.23 --setDiscoModeBridgeLamp 5\r\n")
+    return
+  elif func == "":
+    print("SET DISCO MODE FOR BRIDGE LAMP (-1, --setDiscoModeBridgeLamp): Set disco mode for bridge lamp (between 1 and 9)")
+
 
   # Add use case examples:
   if func == "":
@@ -842,11 +1026,13 @@ def main():
 
   # Get options
   try:
-    opts, args = getopt.getopt(sys.argv[1:], "i:p:t:z:hmluofxynwagc:b:s:e:d:",
+    opts, args = getopt.getopt(sys.argv[1:], "i:p:t:z:hmluofxynwagc:b:s:e:d:jkqr:v:1:",
                                ["ip=", "port=", "timeout=", "zone=", "help",
                                 "getMacAddress", "link", "unlink", "turnOn", "turnOff", "turnOnWifiBridgeLamp",
                                 "turnOffWifiBridgeLamp", "setNightMode", "setWhiteMode", "speedUpDiscoMode", "slowDownDiscoMode",
-                                "setColor=", "setBrightness=", "setSaturation=", "setTemperature=", "setDiscoMode="])
+                                "setColor=", "setBrightness=", "setSaturation=", "setTemperature=", "setDiscoMode=",
+                                "setWhiteModeBridgeLamp", "speedUpDiscoModeBridgeLamp", "slowDownDiscoModeBridgeLamp",
+                                "setColorBridgeLamp=", "setBrightnessBridgeLamp=", "setDiscoModeBridgeLamp="])
   except getopt.GetoptError as err:
     print("[ERROR] "+str(err))
     __help()
@@ -941,6 +1127,36 @@ def main():
     elif o in ("-y", "--turnOffWifiBridgeLamp"):
       atLeastOneRequestDone = True
       returnValue &= milight.turnOffWifiBridgeLamp()
+    elif o in ("-j", "--setWhiteModeBridgeLamp"):
+      atLeastOneRequestDone = True
+      returnValue &= milight.setWhiteModeBridgeLamp()
+    elif o in ("-k", "--speedUpDiscoModeBridgeLamp"):
+      atLeastOneRequestDone = True
+      returnValue &= milight.speedUpDiscoModeBridgeLamp()
+    elif o in ("-q", "--slowDownDiscoModeBridgeLamp"):
+      atLeastOneRequestDone = True
+      returnValue &= milight.slowDownDiscoModeBridgeLamp()
+    elif o in ("-r", "--setColorBridgeLamp"):
+      userColor = int(a)
+      if userColor < 0 or userColor > 255:
+        print("[ERROR] Color must be between 0 and 255")
+        sys.exit(2)
+      atLeastOneRequestDone = True
+      returnValue &= milight.setColorBridgeLamp(color=userColor)
+    elif o in ("-v", "--setBrightnessBridgeLamp"):
+      userBrightness = int(a)
+      if userBrightness < 0 or userBrightness > 100:
+        print("[ERROR] Brightness must be between 0 and 100 (in %)")
+        sys.exit(2)
+      atLeastOneRequestDone = True
+      returnValue &= milight.setBrightnessBridgeLamp(brightness=userBrightness)
+    elif o in ("-1", "--setDiscoModeBridgeLamp"):
+      mode = int(a)
+      if mode < 1 or mode > 9:
+        print("[ERROR] Disco mode must be between 1 and 9")
+        sys.exit(2)
+      atLeastOneRequestDone = True
+      returnValue &= milight.setDiscoModeBridgeLamp(discoMode=mode)
     elif o in ("-n", "--setNightMode"):
       atLeastOneRequestDone = True
       returnValue &= milight.setNightMode(zoneId=zone)
