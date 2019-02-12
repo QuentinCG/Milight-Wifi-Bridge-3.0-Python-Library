@@ -321,14 +321,14 @@ class MilightWifiBridge:
       if len(data) == 22:
         # Parse valid start session response
         response = MilightWifiBridge.__START_SESSION_RESPONSE(responseReceived=True,
-                                                              mac=str("{}:{}:{}:{}:{}:{}".format(format(data[7], 'x'),
-                                                                                                 format(data[8], 'x'),
-                                                                                                 format(data[9], 'x'),
-                                                                                                 format(data[10], 'x'),
-                                                                                                 format(data[11], 'x'),
-                                                                                                 format(data[12], 'x'))),
-                                                              sessionId1=int(data[19]),
-                                                              sessionId2=int(data[20]))
+                                                              mac=str("{}:{}:{}:{}:{}:{}".format(format(ord(data[7]), 'x'),
+                                                                                                 format(ord(data[8]), 'x'),
+                                                                                                 format(ord(data[9]), 'x'),
+                                                                                                 format(ord(data[10]), 'x'),
+                                                                                                 format(ord(data[11]), 'x'),
+                                                                                                 format(ord(data[12]), 'x'))),
+                                                              sessionId1=int(ord(data[19])),
+                                                              sessionId2=int(ord(data[20])))
         logging.debug("Start session (mac address: {}, session ID 1: {}, session ID 2: {})"
                       .format(str(response.mac), str(response.sessionId1), str(response.sessionId2)))
       else:
