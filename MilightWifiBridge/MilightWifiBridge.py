@@ -312,7 +312,7 @@ class MilightWifiBridge:
     data_to_send = MilightWifiBridge.__START_SESSION_MSG
     logging.debug("Sending frame '{}' to {}:{}".format(str(binascii.hexlify(data_to_send)),
                                                      str(self.__ip), str(self.__port)))
-    self.__sock.sendto(data_to_send, (self.__ip, self.__port))
+    self.__sock.send(data_to_send)
     response = MilightWifiBridge.__START_SESSION_RESPONSE(responseReceived=False, mac="", sessionId1=-1, sessionId2=-1)
 
     try:
@@ -371,7 +371,7 @@ class MilightWifiBridge:
           logging.debug("Sending request with command '{}' with session ID 1 '{}', session ID 2 '{}' and sequence number '{}'"
                         .format(str(binascii.hexlify(command)), str(startSessionResponse.sessionId1),
                                 str(startSessionResponse.sessionId2), str(self.__sequence_number)))
-          self.__sock.sendto(bytesToSend, (self.__ip, self.__port))
+          self.__sock.send(bytesToSend)
           try:
             # Receive response frame
             data, addr = self.__sock.recvfrom(64)
