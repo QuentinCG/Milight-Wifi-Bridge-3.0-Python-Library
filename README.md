@@ -52,73 +52,73 @@ Non-exhaustive list of shell commands:
 # Note: You can combine multiple requests in one command if you want
 
 # Get help
-MilightWifiBridge.py --help
+python3 MilightWifiBridge.py --help
 
 # Link bulbs to a specific zone (light on the bulbs max 3sec before calling this command)
-MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --link
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --link
 
 # Unlink bulbs to a specific zone (light on the bulbs max 3sec before calling this command)
-MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --unlink
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --unlink
 
 # Turn lights ON
-MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --turnOn
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --turnOn
 
 # Turn lights OFF
-MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --turnOff
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --turnOff
 
 # Turn wifi bridge light ON
-MilightWifiBridge.py --ip 192.168.1.23 --turnOnWifiBridgeLamp
+python3 MilightWifiBridge.py --ip 192.168.1.23 --turnOnWifiBridgeLamp
 
 # Turn wifi bridge light OFF
-MilightWifiBridge.py --ip 192.168.1.23 --turnOffWifiBridgeLamp
+python3 MilightWifiBridge.py --ip 192.168.1.23 --turnOffWifiBridgeLamp
 
 # Set night mode
-MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setNightMode
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setNightMode
 
 # Set white mode
-MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setWhiteMode
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setWhiteMode
 
 # Set white mode of the bridge light
-MilightWifiBridge.py --ip 192.168.1.23 --setWhiteModeBridgeLamp
+python3 MilightWifiBridge.py --ip 192.168.1.23 --setWhiteModeBridgeLamp
 
 # Speed up disco mode
-MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --speedUpDiscoMode
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --speedUpDiscoMode
 
 # Slow down disco mode
-MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --slowDownDiscoMode
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --slowDownDiscoMode
 
 # Speed up disco mode of the bridge light
-MilightWifiBridge.py --ip 192.168.1.23 --speedUpDiscoModeBridgeLamp
+python3 MilightWifiBridge.py --ip 192.168.1.23 --speedUpDiscoModeBridgeLamp
 
 # Slow down disco mode of the bridge light
-MilightWifiBridge.py --ip 192.168.1.23 --slowDownDiscoModeBridgeLamp
+python3 MilightWifiBridge.py --ip 192.168.1.23 --slowDownDiscoModeBridgeLamp
 
 # Set specific color
-MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setColor 255
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setColor 255
 
 # Set specific color of the bridge light
-MilightWifiBridge.py --ip 192.168.1.23 --setColorBridgeLamp 255
+python3 MilightWifiBridge.py --ip 192.168.1.23 --setColorBridgeLamp 255
 
 # Set brightness
-MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setBrightness 50
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setBrightness 50
 
 # Set brightness of the bridge light
-MilightWifiBridge.py --ip 192.168.1.23 --setBrightnessBridgeLamp 50
+python3 MilightWifiBridge.py --ip 192.168.1.23 --setBrightnessBridgeLamp 50
 
 # Set saturation
-MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setSaturation 50
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setSaturation 50
 
 # Set temperature
-MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setTemperature 50
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setTemperature 50
 
 # Set disco mode
-MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setDiscoMode 5
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --setDiscoMode 5
 
 # Set disco mode of the bridge light
-MilightWifiBridge.py --ip 192.168.1.23 --setDiscoModeBridgeLamp 5
+python3 MilightWifiBridge.py --ip 192.168.1.23 --setDiscoModeBridgeLamp 5
 
 # Combined commands: Turn ON ALL lights (zone 0) with white mode, a brightness of 50% and a saturation of 50%
-MilightWifiBridge.py --ip 192.168.1.23 --zone 0 --turnOn --setWhiteMode --setBrightness 50 --setSaturation 50
+python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 0 --turnOn --setWhiteMode --setBrightness 50 --setSaturation 50
 ```
 
 
