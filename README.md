@@ -1,5 +1,5 @@
 # Milight Wifi Bridge 3.0 Python library
-[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library/blob/master/LICENSE) [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/QuentinCG)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/171affbf02ea46d891765c2d39c56ce2)](https://www.codacy.com/manual/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library&amp;utm_campaign=Badge_Grade) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library/blob/master/LICENSE) [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/QuentinCG)
 
 ## What is it
 
