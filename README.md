@@ -1,6 +1,7 @@
 # Milight Wifi Bridge 3.0 Python library
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library/blob/master/LICENSE) [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/QuentinCG)
 
-## What is it?
+## What is it
 
 This python library is designed to be integrated in python or shell projects using any Milight 3.0 bulbs and wifi bridge (with protocol LimitlessLED Wifi Bridge v6.0).
 
@@ -8,43 +9,40 @@ It is multi-platform and compatible with python 3+.
 
 <img src="milight.jpg" width="800">
 
-
 ## Functionalities
 
 Non-exhaustive list of MilightWifiBridge class functionalities:
-  - Link/Unlink lights
-  - Light on/off
-  - Wifi bridge light on/off
-  - Set night light mode
-  - Set white light mode (default light) (of lights and bridge light)
-  - Set color (of lights and bridge light)
-  - Set saturation
-  - Set brightness (of lights and bridge light)
-  - Set disco mode (9 available) (of lights and bridge light)
-  - Increase/Decrease disco mode speed (of lights and bridge light)
-  - Get Milight wifi bridge MAC address
+- Link/Unlink lights
+- Light on/off
+- Wifi bridge light on/off
+- Set night light mode
+- Set white light mode (default light) (of lights and bridge light)
+- Set color (of lights and bridge light)
+- Set saturation
+- Set brightness (of lights and bridge light)
+- Set disco mode (9 available) (of lights and bridge light)
+- Increase/Decrease disco mode speed (of lights and bridge light)
+- Get Milight wifi bridge MAC address
 
 Non-exhaustive list of shell commands:
-  - Link/Unlink lights
-  - Light on/off
-  - Wifi bridge light on/off
-  - Set night light mode
-  - Set white light mode (default light) (of lights and bridge light)
-  - Set color (of lights and bridge light)
-  - Set saturation
-  - Set brightness (of lights and bridge light)
-  - Set disco mode (9 available) (of lights and bridge light)
-  - Increase/Decrease disco mode speed (of lights and bridge light)
-  - Get Milight wifi bridge MAC address
-  - Help
-
+- Link/Unlink lights
+- Light on/off
+- Wifi bridge light on/off
+- Set night light mode
+- Set white light mode (default light) (of lights and bridge light)
+- Set color (of lights and bridge light)
+- Set saturation
+- Set brightness (of lights and bridge light)
+- Set disco mode (9 available) (of lights and bridge light)
+- Increase/Decrease disco mode speed (of lights and bridge light)
+- Get Milight wifi bridge MAC address
+- Help
 
 ## How to install (python script and shell)
 
-  - Connect your Milight 3.0 wifi bridge to your wifi network (install the android app and follow the instruction: https://play.google.com/store/apps/details?id=com.irainxun.wifilight)
-  - Get IP address and port of the wifi bridge (you can for example use this software to help you: http://www.limitlessled.com/download/LimitlessLEDv4.zip)
-  - Load your shell or python script
-
+- Connect your Milight 3.0 wifi bridge to your wifi network (install the android app and follow the instruction: <https://play.google.com/store/apps/details?id=com.irainxun.wifilight>)
+- Get IP address and port of the wifi bridge (you can for example use this software to help you: <http://www.limitlessled.com/download/LimitlessLEDv4.zip>)
+- Load your shell or python script
 
 ## How to use in shell
 
@@ -120,7 +118,6 @@ python3 MilightWifiBridge.py --ip 192.168.1.23 --setDiscoModeBridgeLamp 5
 # Combined commands: Turn ON ALL lights (zone 0) with white mode, a brightness of 50% and a saturation of 50%
 python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 0 --turnOn --setWhiteMode --setBrightness 50 --setSaturation 50
 ```
-
 
 ## How to use in python script
 
@@ -218,11 +215,9 @@ print("Set temperature {} in zone {}: {}".format(str(_temperature), str(_zoneId)
 milight.close()
 ```
 
-
 ## License
 
 This project is under MIT license. This means you can use it as you want (just don't delete the library header).
-
 
 ## Contribute
 
