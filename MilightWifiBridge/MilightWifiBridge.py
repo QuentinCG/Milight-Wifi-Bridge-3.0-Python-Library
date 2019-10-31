@@ -34,7 +34,6 @@ __version__ = "1.0 (2017/04/10)"
 __status__ = "Usable for any project"
 
 import socket
-import time
 import collections
 import sys, getopt
 import logging
