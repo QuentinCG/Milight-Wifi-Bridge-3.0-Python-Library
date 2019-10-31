@@ -294,9 +294,8 @@ class MilightWifiBridge:
       self.__sock.settimeout(timeout_sec)
       self.__initialized = True
       logging.debug("UDP connection initialized with ip {} and port {}".format(str(ip), str(port)))
-    except (socket.error, socket.herror, socket.gaierror, socket.timeout) as e:
-      logging.error("Impossible to initialize the UDP connection with ip {} and port {}".format(str(ip), str(port)))
-      pass
+    except (socket.error, socket.herror, socket.gaierror, socket.timeout) as err:
+      logging.error("Impossible to initialize the UDP connection with ip {} and port {}: {}".format(str(ip), str(port), str(err)))
 
     return self.__initialized
 
@@ -317,7 +316,7 @@ class MilightWifiBridge:
 
     try:
       # Receive start session response
-      data, addr = self.__sock.recvfrom(1024)
+      data = self.__sock.recvfrom(1024)[0]
       if len(data) == 22:
         # Parse valid start session response
         response = MilightWifiBridge.__START_SESSION_RESPONSE(responseReceived=True,
@@ -374,7 +373,7 @@ class MilightWifiBridge:
           self.__sock.sendto(bytesToSend, (self.__ip, self.__port))
           try:
             # Receive response frame
-            data, addr = self.__sock.recvfrom(64)
+            data = self.__sock.recvfrom(64)[0]
             if len(data) == 8:
               if data[6] == self.__sequence_number:
                 returnValue = True
