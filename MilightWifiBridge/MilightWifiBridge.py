@@ -15,7 +15,7 @@
     - Wifi bridge lamp on/off
     - Set night mode
     - Set white mode
-    - Set color
+    - Set color (using Milight format)
     - Set saturation
     - Set brightness
     - Set disco mode (9 available)
@@ -28,9 +28,9 @@
 __author__ = 'Quentin Comte-Gaz'
 __email__ = "quentin@comte-gaz.com"
 __license__ = "MIT License"
-__copyright__ = "Copyright Quentin Comte-Gaz (2017)"
+__copyright__ = "Copyright Quentin Comte-Gaz (2019)"
 __python_version__ = "3.+"
-__version__ = "1.0 (2017/04/10)"
+__version__ = "1.1 (2019/06/17)"
 __status__ = "Usable for any project"
 
 import socket
@@ -70,6 +70,15 @@ class MilightWifiBridge:
     DAYLIGHT = 61 # 5000K
     COOL_DAYLIGHT = 100 # 6500K
 
+  class eColor:
+    RED = 0xFF
+    LAVENDER = 0xD9
+    BLUE = 0xBA
+    AQUA = 0x85
+    GREEN = 0x7A
+    LIME = 0x54
+    YELLOW = 0x3B
+    ORANGE = 0x1E
 
   ######################### static variables/static functions/internal struct #########################
   __START_SESSION_MSG = bytearray([0x20, 0x00, 0x00, 0x00, 0x16, 0x02, 0x62, 0x3A, 0xD5, 0xED, 0xA3, 0x01, 0xAE, 0x08,
@@ -104,7 +113,7 @@ class MilightWifiBridge:
     """Give 'Set color for bridge lamp' command
 
     Keyword arguments:
-      color -- (int) Color value between 0x00 and 0xFF
+      color -- (int or eColor) Color value between 0x00 and 0xFF
                      examples: 0xFF = Red, 0xD9 = Lavender, 0xBA = Blue, 0x85 = Aqua,
                                0x7A = Green, 0x54 = Lime, 0x3B = Yellow, 0x1E = Orange
 
@@ -118,7 +127,7 @@ class MilightWifiBridge:
     """Give 'Set color' command
 
     Keyword arguments:
-      color -- (int) Color value between 0x00 and 0xFF
+      color -- (int or eColor) Color value between 0x00 and 0xFF
                      examples: 0xFF = Red, 0xD9 = Lavender, 0xBA = Blue, 0x85 = Aqua,
                                0x7A = Green, 0x54 = Lime, 0x3B = Yellow, 0x1E = Orange
 
@@ -568,7 +577,7 @@ class MilightWifiBridge:
     """Request 'Set color' to a zone
 
     Keyword arguments:
-      color -- (int) Color (between 0x00 and 0xFF)
+      color -- (int or eColor) Color (between 0x00 and 0xFF)
                      examples: 0xFF = Red, 0xD9 = Lavender, 0xBA = Blue, 0x85 = Aqua,
                                0x7A = Green, 0x54 = Lime, 0x3B = Yellow, 0x1E = Orange
       zoneId -- (int or MilightWifiBridge.eZone) Zone ID
@@ -583,7 +592,7 @@ class MilightWifiBridge:
     """Request 'Set color' to wifi bridge
 
     Keyword arguments:
-      color -- (int) Color (between 0x00 and 0xFF)
+      color -- (int or eColor) Color (between 0x00 and 0xFF)
                      examples: 0xFF = Red, 0xD9 = Lavender, 0xBA = Blue, 0x85 = Aqua,
                                0x7A = Green, 0x54 = Lime, 0x3B = Yellow, 0x1E = Orange
 
