@@ -1,0 +1,27 @@
+language: python
+python:
+  # Test python 2.7 version
+  #- "2.7"
+  # Test most used python 3 version
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.7"
+  - "3.8"
+sudo: false
+install:
+  - pip install codecov
+
+script:
+  # (Re)install library
+  # This implicitly covers build (and test coverage on setup.py)
+  - pip uninstall GSMTC35 --yes
+  - coverage run -p setup.py install
+  # Launch library test (+ test coverage)
+  - coverage run -p setup.py test
+  # Prepare results before sending them back to codecov
+  - coverage combine
+
+# Push the results back to codecov
+after_success:
+  - codecov
