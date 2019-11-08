@@ -167,6 +167,25 @@ class TestMilightWifiBridge(unittest.TestCase):
     milight = MilightWifiBridge.MilightWifiBridge()
     self.assertTrue(milight.setup("127.0.0.1", 100))
 
+  def test_socket(self, new=MockSocket):
+    logging.debug("test_socket")
+    # Use real socket, not Mock (to be sure the use of socket.socket is compatible between python version)
+    import socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.connect(("127.0.0.1", 9461))
+    sock.settimeout(0)
+    sock.sendto(bytearray([0x00]), ("127.0.0.1", 9461))
+    try:
+      sock.recvfrom(0)
+    except Exception as e:
+      self.assertTrue("10054" in str(e))
+
+    sock.shutdown(socket.SHUT_RDWR)
+    sock.close()
+
+    milight = MilightWifiBridge.MilightWifiBridge()
+    self.assertTrue(milight.setup("127.0.0.1", 100))
+
   @patch('socket.socket', new=MockSocket)
   def test_get_mac_address(self, new=MockSocket):
     logging.debug("test_get_mac_address")
