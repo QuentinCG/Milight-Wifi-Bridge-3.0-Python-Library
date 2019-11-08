@@ -119,7 +119,15 @@ class MilightWifiBridge:
 
     return: (bytearray) 'Set colo for bridge lamp' command
     """
-    color = int(color) & 0xFF
+    color = int(color)
+
+    if color < 0:
+      color = 0
+    elif color > 0xFF:
+      color = 0xFF
+
+    color &= 0xFF
+
     return bytearray([0x31, 0x00, 0x00, 0x00, 0x01, color, color, color, color])
 
   @staticmethod
@@ -133,7 +141,15 @@ class MilightWifiBridge:
 
     return: (bytearray) 'Set color' command
     """
-    color = int(color) & 0xFF
+    color = int(color)
+
+    if color < 0:
+      color = 0
+    elif color > 0xFF:
+      color = 0xFF
+
+    color &= 0xFF
+
     return bytearray([0x31, 0x00, 0x00, 0x08, 0x01, color, color, color, color])
 
   @staticmethod
@@ -145,11 +161,14 @@ class MilightWifiBridge:
 
     return: (bytearray) 'Set disco mode for bridge lamp' command
     """
-    mode = int(mode) & 0xFF
+    mode = int(mode)
+
     if mode < 1:
       mode = 1
     elif mode > 9:
       mode = 9
+
+    mode &= 0xFF
 
     return bytearray([0x31, 0x00, 0x00, 0x00, 0x04, mode, 0x00, 0x00, 0x00])
 
@@ -162,11 +181,14 @@ class MilightWifiBridge:
 
     return: (bytearray) 'Set disco mode' command
     """
-    mode = int(mode) & 0xFF
+    mode = int(mode)
+
     if mode < 1:
       mode = 1
     elif mode > 9:
       mode = 9
+
+    mode &= 0xFF
 
     return bytearray([0x31, 0x00, 0x00, 0x08, 0x06, mode, 0x00, 0x00, 0x00])
 
@@ -179,11 +201,14 @@ class MilightWifiBridge:
 
     return: (bytearray) 'Set brightness for bridge lamp' command
     """
-    brightness = int(brightness) & 0xFF
+    brightness = int(brightness)
+
     if brightness < 0:
       brightness = 0
     elif brightness > 100:
       brightness = 100
+
+    brightness &= 0xFF
 
     return bytearray([0x31, 0x00, 0x00, 0x00, 0x02, brightness, 0x00, 0x00, 0x00])
 
@@ -196,11 +221,14 @@ class MilightWifiBridge:
 
     return: (bytearray) 'Set brightness' command
     """
-    brightness = int(brightness) & 0xFF
+    brightness = int(brightness)
+
     if brightness < 0:
       brightness = 0
     elif brightness > 100:
       brightness = 100
+
+    brightness &= 0xFF
 
     return bytearray([0x31, 0x00, 0x00, 0x08, 0x03, brightness, 0x00, 0x00, 0x00])
 
@@ -213,11 +241,14 @@ class MilightWifiBridge:
 
     return: (bytearray) 'Set saturation' command
     """
-    saturation = int(saturation) & 0xFF
+    saturation = int(saturation)
+
     if saturation < 0:
       saturation = 0
     elif saturation > 100:
       saturation = 100
+
+    saturation &= 0xFF
 
     return bytearray([0x31, 0x00, 0x00, 0x08, 0x02, saturation, 0x00, 0x00, 0x00])
 
@@ -232,11 +263,14 @@ class MilightWifiBridge:
 
     return: (bytearray) 'Set temperature' command
     """
-    temperature = int(temperature) & 0xFF
+    temperature = int(temperature)
+
     if temperature < 0:
       temperature = 0
     elif temperature > 100:
       temperature = 100
+
+    temperature &= 0xFF
 
     return bytearray([0x31, 0x00, 0x00, 0x08, 0x05, temperature, 0x00, 0x00, 0x00])
 
