@@ -1053,7 +1053,7 @@ def __help(func="", filename=__file__):
 
 
 ################################# MAIN FUNCTION ###############################
-def main():
+def main(parsed_args = sys.argv[1:]):
   """Shell Milight utility function"""
 
   # Set the log level (no log will be shown if "logging.CRITICAL" is used)
@@ -1067,8 +1067,8 @@ def main():
 
   # Get options
   try:
-    opts, args = getopt.getopt(sys.argv[1:], "i:p:t:z:hmluofxynwagc:b:s:e:d:jkqr:v:1:",
-                               ["ip=", "port=", "timeout=", "zone=", "help",
+    opts, args = getopt.getopt(parsed_args, "i:p:t:z:hmluofx23ynwagc:b:s:e:d:jkqr:v:1:",
+                               ["ip=", "port=", "timeout=", "zone=", "help", "debug", "nodebug",
                                 "getMacAddress", "link", "unlink", "turnOn", "turnOff", "turnOnWifiBridgeLamp",
                                 "turnOffWifiBridgeLamp", "setNightMode", "setWhiteMode", "speedUpDiscoMode", "slowDownDiscoMode",
                                 "setColor=", "setBrightness=", "setSaturation=", "setTemperature=", "setDiscoMode=",
@@ -1087,6 +1087,14 @@ def main():
       else:
         __help()
       sys.exit(0)
+    elif o in ("-l", "--debug"):
+      print("Debugging...")
+      logger = logging.getLogger()
+      logger.setLevel(logging.DEBUG)
+    elif o in ("-z", "--nodebug"):
+      logger = logging.getLogger()
+      logger.setLevel(logging.CRITICAL)
+
 
   # Get base parameters
   for o, a in opts:
@@ -1125,10 +1133,10 @@ def main():
     sys.exit(1)
 
   # Show base parameters
-  logging.debug("Ip: "+str(ip))
-  logging.debug("Zone: "+str(zone))
-  logging.debug("Timeout: "+str(timeout))
-  logging.debug("Port: "+str(port))
+  print("Ip: "+str(ip))
+  print("Zone: "+str(zone))
+  print("Timeout: "+str(timeout))
+  print("Port: "+str(port))
 
   # Initialize Milight bridge
   milight = MilightWifiBridge()
