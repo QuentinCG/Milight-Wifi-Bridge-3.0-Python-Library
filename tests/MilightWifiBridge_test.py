@@ -378,6 +378,222 @@ class TestMilightWifiBridge(unittest.TestCase):
     self.assertTrue(MockSocket.initializeMockAndMilight(getTemperatureCmd(0), 2, True).setTemperature(-785, 2))
     self.assertFalse(MockSocket.initializeMockAndMilight(getTemperatureCmd(0), 2, False).setTemperature(0, 2))
 
+  @patch('socket.socket', new=MockSocket)
+  def test_all_cmd_request_except_help_cmd(self):
+    logging.debug("test_all_cmd_request_except_help_cmd")
+
+    # Request failed because nothing requested
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((['--ip', '127.0.0.1', '--port', '1234', '--timeout', '5', '--zone', '0', '--nodebug', '--debug']))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue("Debugging..." in std_output)
+    self.assertTrue("Ip: 127.0.0.1" in std_output)
+    self.assertTrue("Zone: 0" in std_output)
+    self.assertTrue("Timeout: 5" in std_output)
+    self.assertTrue("Port: 1234" in std_output)
+    self.assertTrue("[ERROR] You must call one action, use '-h' to get more information." in std_output)
+
+    # Invalid parameters
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main(([]))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue("[ERROR] You need to specify the ip..." in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main(('--ip', '127.0.0.1', '--port', '-4'))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue("[ERROR] You need to specify a valid port (more than 0)" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main(('--ip', '127.0.0.1', '--timeout', '-4'))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue("[ERROR] You need to specify a valid timeout (more than 0sec)" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main(('--ip', '127.0.0.1', '--zone', '-7'))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue("[ERROR] You need to specify a valid zone ID (between 0 and 4)" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main(('--ip', '127.0.0.1', '--zone', '7'))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue("[ERROR] You need to specify a valid zone ID (between 0 and 4)" in std_output)
+
+    # Show help
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("LINK (-l, --link): Link lights to a specific zone" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "help"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "ip"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "port"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "timeout"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "zone"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "getmacaddress"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "link"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "unlink"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "turnon"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "turnoff"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "turnonwifibridgelamp"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "turnoffwifibridgelamp"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "setnightmode"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "setwhitemode"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "setwhitemodebridgelamp"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "speedupdiscomodebridgelamp"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "slowdowndiscomodebridgelamp"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "speedupdiscomode"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "slowdowndiscomode"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "setcolor"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "setbrightness"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "setcolorbridgelamp"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "setbrightnessbridgelamp"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "setsaturation"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "settemperature"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "setdiscomode"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((["--help", "setdiscomodebridgelamp"]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Usage:" in std_output)
+
 if __name__ == '__main__':
   logger = logging.getLogger()
   logger.setLevel(logging.DEBUG)
