@@ -178,6 +178,7 @@ class TestMilightWifiBridge(unittest.TestCase):
     try:
       sock.recvfrom(0)
     except Exception as e:
+      print(str(e))
       self.assertTrue("10054" in str(e))
 
     sock.shutdown(socket.SHUT_RDWR)
