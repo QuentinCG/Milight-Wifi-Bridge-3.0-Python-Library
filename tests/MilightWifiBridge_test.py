@@ -46,6 +46,17 @@ class MockSocket:
   __read_write = []
 
   @staticmethod
+  def initializeMock(read_write):
+    MockSocket.__read_write = read_write
+
+  @staticmethod
+  def initializeMilight(ip = "127.0.0.1", port = 100):
+    milight = MilightWifiBridge.MilightWifiBridge()
+    milight.setup(ip, port)
+
+    return milight
+
+  @staticmethod
   def initializeMockAndMilight(command, zoneId, milight_response):
     def calculateCheckSum(command, zoneId):
       checkSum = 0
@@ -60,7 +71,7 @@ class MockSocket:
     bytesToSend += bytearray([int(zoneId), 0x00])
     bytesToSend += bytearray([int(calculateCheckSum(bytearray(command), int(zoneId)))])
 
-    MockSocket.__read_write = [
+    read_write = [
       # Start session request
       {'IN': bytearray([0x20,0x00,0x00,0x00,0x16,0x02,0x62,0x3a,0xd5,0xed,0xa3,0x01,0xae,
                         0x08,0x2d,0x46,0x61,0x41,0xa7,0xf6,0xdc,0xaf,0xd3,0xe6,0x00,0x00,0x1e])},
@@ -72,12 +83,11 @@ class MockSocket:
     ]
 
     if milight_response:
-      MockSocket.__read_write.append({'OUT': bytearray([0x00,0x00,0x00,0x00,0x00,0x00,0x01,0x00])})
+      read_write.append({'OUT': bytearray([0x00,0x00,0x00,0x00,0x00,0x00,0x01,0x00])})
 
-    milight = MilightWifiBridge.MilightWifiBridge()
-    milight.setup("127.0.0.1", 100)
+    MockSocket.initializeMock(read_write)
 
-    return milight
+    return MockSocket.initializeMilight()
 
   def __init__(self, family = None, type = None):
     return
@@ -145,10 +155,34 @@ class TestMilightWifiBridge(unittest.TestCase):
     self.assertNotEqual(milight, None)
 
   @patch('socket.socket', new=MockSocket)
+  def test_close(self, new=MockSocket):
+    logging.debug("test_close")
+    milight = MilightWifiBridge.MilightWifiBridge()
+    self.assertTrue(milight.setup("127.0.0.1", 100))
+    self.assertEqual(milight.close(), None)
+
+  @patch('socket.socket', new=MockSocket)
   def test_setup(self, new=MockSocket):
     logging.debug("test_instance")
     milight = MilightWifiBridge.MilightWifiBridge()
     self.assertTrue(milight.setup("127.0.0.1", 100))
+
+  @patch('socket.socket', new=MockSocket)
+  def test_get_mac_address(self, new=MockSocket):
+    logging.debug("test_get_mac_address")
+
+    MockSocket.initializeMock([
+      {'IN': bytearray([0x20,0x00,0x00,0x00,0x16,0x02,0x62,0x3a,0xd5,0xed,0xa3,0x01,0xae,
+                        0x08,0x2d,0x46,0x61,0x41,0xa7,0xf6,0xdc,0xaf,0xd3,0xe6,0x00,0x00,0x1e])},
+      {'OUT': bytearray([0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x10,0x11,0x12,0x13,0x14,
+                         0x15,0x16,0x17,0x18,0x19,0x20,0x21,0x22])},
+      {'IN': bytearray([0x20,0x00,0x00,0x00,0x16,0x02,0x62,0x3a,0xd5,0xed,0xa3,0x01,0xae,
+                        0x08,0x2d,0x46,0x61,0x41,0xa7,0xf6,0xdc,0xaf,0xd3,0xe6,0x00,0x00,0x1e])},
+      {'OUT': bytearray([0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x10,0x11,0x12,0x13,0x14,
+                         0x15,0x16,0x17,0x18,0x19,0x20,0x21,0x22])}
+    ])
+    milight = MockSocket.initializeMilight()
+    self.assertEqual(milight.getMacAddress(), "8:9:10:11:12:13")
 
   @patch('socket.socket', new=MockSocket)
   def test_turn_on(self, new=MockSocket):
@@ -240,6 +274,96 @@ class TestMilightWifiBridge(unittest.TestCase):
     UNLINK_CMD = bytearray([0x3e,0x00,0x00,0x08,0x00,0x00,0x00,0x00,0x00])
     self.assertTrue(MockSocket.initializeMockAndMilight(UNLINK_CMD, 2, True).unlink(2))
     self.assertFalse(MockSocket.initializeMockAndMilight(UNLINK_CMD, 3, False).unlink(3))
+
+  @patch('socket.socket', new=MockSocket)
+  def test_set_disco_mode(self, new=MockSocket):
+    logging.debug("test_set_disco_mode")
+    def getDiscoModeCmd(mode):
+      return bytearray([0x31, 0x00, 0x00, 0x08, 0x06, mode, 0x00, 0x00, 0x00])
+    self.assertTrue(MockSocket.initializeMockAndMilight(getDiscoModeCmd(1), 2, True).setDiscoMode(1, 2))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getDiscoModeCmd(9), 3, True).setDiscoMode(9, 3))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getDiscoModeCmd(9), 3, True).setDiscoMode(50, 3))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getDiscoModeCmd(9), 3, True).setDiscoMode(9999, 3))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getDiscoModeCmd(1), 3, True).setDiscoMode(-454, 3))
+    self.assertFalse(MockSocket.initializeMockAndMilight(getDiscoModeCmd(1), 2, False).setDiscoMode(1, 2))
+
+  @patch('socket.socket', new=MockSocket)
+  def test_set_disco_mode_bridge(self, new=MockSocket):
+    logging.debug("test_set_disco_mode_bridge")
+    def getDiscoModeBridgeCmd(mode):
+      return bytearray([0x31, 0x00, 0x00, 0x00, 0x04, mode, 0x00, 0x00, 0x00])
+    self.assertTrue(MockSocket.initializeMockAndMilight(getDiscoModeBridgeCmd(1), 1, True).setDiscoModeBridgeLamp(1))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getDiscoModeBridgeCmd(9), 1, True).setDiscoModeBridgeLamp(9))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getDiscoModeBridgeCmd(9), 1, True).setDiscoModeBridgeLamp(50))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getDiscoModeBridgeCmd(9), 1, True).setDiscoModeBridgeLamp(9999))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getDiscoModeBridgeCmd(1), 1, True).setDiscoModeBridgeLamp(-19))
+    self.assertFalse(MockSocket.initializeMockAndMilight(getDiscoModeBridgeCmd(1), 1, False).setDiscoModeBridgeLamp(1))
+
+  @patch('socket.socket', new=MockSocket)
+  def test_set_color(self, new=MockSocket):
+    logging.debug("test_set_color")
+    def getColorCmd(color):
+      return bytearray([0x31, 0x00, 0x00, 0x08, 0x01, color, color, color, color])
+    self.assertTrue(MockSocket.initializeMockAndMilight(getColorCmd(1), 0, True).setColor(1, 0))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getColorCmd(50), 3, True).setColor(50, 3))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getColorCmd(255), 2, True).setColor(9999, 2))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getColorCmd(0), 2, True).setColor(-785, 2))
+    self.assertFalse(MockSocket.initializeMockAndMilight(getColorCmd(1), 2, False).setColor(1, 2))
+
+  @patch('socket.socket', new=MockSocket)
+  def test_set_color_bridge(self, new=MockSocket):
+    logging.debug("test_set_color_bridge")
+    def getColorBridgeCmd(color):
+      return bytearray([0x31, 0x00, 0x00, 0x00, 0x01, color, color, color, color])
+    self.assertTrue(MockSocket.initializeMockAndMilight(getColorBridgeCmd(1), 1, True).setColorBridgeLamp(1))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getColorBridgeCmd(50), 1, True).setColorBridgeLamp(50))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getColorBridgeCmd(255), 1, True).setColorBridgeLamp(9999))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getColorBridgeCmd(0), 1, True).setColorBridgeLamp(-785))
+    self.assertFalse(MockSocket.initializeMockAndMilight(getColorBridgeCmd(1), 1, False).setColorBridgeLamp(1))
+
+  @patch('socket.socket', new=MockSocket)
+  def test_brightness(self, new=MockSocket):
+    logging.debug("test_brightness")
+    def getBrightnessCmd(brightness):
+      return bytearray([0x31, 0x00, 0x00, 0x08, 0x03, brightness, 0x00, 0x00, 0x00])
+    self.assertTrue(MockSocket.initializeMockAndMilight(getBrightnessCmd(1), 0, True).setBrightness(1, 0))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getBrightnessCmd(50), 3, True).setBrightness(50, 3))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getBrightnessCmd(100), 2, True).setBrightness(15522, 2))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getBrightnessCmd(0), 2, True).setBrightness(-785, 2))
+    self.assertFalse(MockSocket.initializeMockAndMilight(getBrightnessCmd(0), 2, False).setBrightness(0, 2))
+
+  @patch('socket.socket', new=MockSocket)
+  def test_brightness_bridge(self, new=MockSocket):
+    logging.debug("test_brightness_bridge")
+    def getBrightnessBridgeCmd(brightness):
+      return bytearray([0x31, 0x00, 0x00, 0x00, 0x02, brightness, 0x00, 0x00, 0x00])
+    self.assertTrue(MockSocket.initializeMockAndMilight(getBrightnessBridgeCmd(1), 1, True).setBrightnessBridgeLamp(1))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getBrightnessBridgeCmd(50), 1, True).setBrightnessBridgeLamp(50))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getBrightnessBridgeCmd(100), 1, True).setBrightnessBridgeLamp(15522))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getBrightnessBridgeCmd(0), 1, True).setBrightnessBridgeLamp(-785))
+    self.assertFalse(MockSocket.initializeMockAndMilight(getBrightnessBridgeCmd(10), 1, False).setBrightnessBridgeLamp(10))
+
+  @patch('socket.socket', new=MockSocket)
+  def test_saturation(self, new=MockSocket):
+    logging.debug("test_saturation")
+    def getSaturationCmd(saturation):
+      return bytearray([0x31, 0x00, 0x00, 0x08, 0x02, saturation, 0x00, 0x00, 0x00])
+    self.assertTrue(MockSocket.initializeMockAndMilight(getSaturationCmd(1), 0, True).setSaturation(1, 0))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getSaturationCmd(50), 3, True).setSaturation(50, 3))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getSaturationCmd(100), 2, True).setSaturation(15522, 2))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getSaturationCmd(0), 2, True).setSaturation(-785, 2))
+    self.assertFalse(MockSocket.initializeMockAndMilight(getSaturationCmd(0), 2, False).setSaturation(0, 2))
+
+  @patch('socket.socket', new=MockSocket)
+  def test_temperature(self, new=MockSocket):
+    logging.debug("test_temperature")
+    def getTemperatureCmd(temperature):
+      return bytearray([0x31, 0x00, 0x00, 0x08, 0x05, temperature, 0x00, 0x00, 0x00])
+    self.assertTrue(MockSocket.initializeMockAndMilight(getTemperatureCmd(1), 0, True).setTemperature(1, 0))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getTemperatureCmd(50), 3, True).setTemperature(50, 3))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getTemperatureCmd(100), 2, True).setTemperature(15522, 2))
+    self.assertTrue(MockSocket.initializeMockAndMilight(getTemperatureCmd(0), 2, True).setTemperature(-785, 2))
+    self.assertFalse(MockSocket.initializeMockAndMilight(getTemperatureCmd(0), 2, False).setTemperature(0, 2))
 
 if __name__ == '__main__':
   logger = logging.getLogger()
