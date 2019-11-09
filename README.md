@@ -5,7 +5,7 @@
 
 This python library is designed to be integrated in python or shell projects using any Milight 3.0 bulbs and wifi bridge (with protocol LimitlessLED Wifi Bridge v6.0).
 
-It is multi-platform and compatible with python 3+.
+It is multi-platform and compatible with python 2.7+ and 3+.
 
 <img src="milight.jpg" width="800">
 
@@ -41,8 +41,12 @@ Non-exhaustive list of shell commands:
 ## How to install (python script and shell)
 
 - Connect your Milight 3.0 wifi bridge to your wifi network (install the android app and follow the instruction: <https://play.google.com/store/apps/details?id=com.irainxun.wifilight>)
-- Get IP address and port of the wifi bridge (you can for example use this software to help you: <http://www.limitlessled.com/download/LimitlessLEDv4.zip>)
+- Get IP address and port of the wifi bridge (ip can be found from your internet box, default port is 5987)
 - Load your shell or python script
+
+Note:
+- You can install this library as a package using `python setup.py install` command in root folder.
+- You can launch unit-test using `python setup.py test` command in root folder.
 
 ## How to use in shell
 
