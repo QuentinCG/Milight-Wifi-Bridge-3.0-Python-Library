@@ -6,7 +6,7 @@ with io.open('README.md', 'r', encoding='utf-8') as readme_file:
 
 setup(
     name='MilightWifiBridge',
-    version='2.0',
+    version='2.1',
     description='Milight Wifi Bridge 3.0 controller for LimitlessLED Wifi Bridge v6.0 protocol (Light ON/OFF, change color/mode/brightness/saturation, link/unlink)',
     long_description=readme,
     long_description_content_type='text/markdown',
