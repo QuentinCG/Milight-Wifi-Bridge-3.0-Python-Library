@@ -12,6 +12,7 @@ python:
 sudo: false
 install:
   - pip install codecov
+  - pip install -U twine wheel setuptools
 
 script:
   # (Re)install library
@@ -22,6 +23,11 @@ script:
   - coverage run -p setup.py test
   # Prepare results before sending them back to codecov
   - coverage combine
+  # Check if there is no issue in setup.py file
+  - rm -rf dist
+  - python setup.py sdist
+  - python setup.py bdist_wheel
+  - twine check dist/*
 
 # Push the results back to codecov
 after_success:
