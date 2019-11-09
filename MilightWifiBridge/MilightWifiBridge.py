@@ -293,6 +293,12 @@ class MilightWifiBridge:
 
     return (checkSum & 0xFF)
 
+  @staticmethod
+  def __getStringFromUnicode(value):
+    try:
+      return ord(value)
+    except:
+      return value
 
   ################################### INIT ####################################
   def __init__(self):
@@ -360,28 +366,16 @@ class MilightWifiBridge:
       # Receive start session response
       data = self.__sock.recvfrom(1024)[0]
       if len(data) == 22:
-        def getHexaStringFromUnicode(value):
-          if sys.version_info >= (3,):
-            return format(value, 'x')
-          else:
-            return format(ord(value), 'x')
-
-        def getIntFromUnicode(value):
-          if sys.version_info >= (3,):
-            return int(value)
-          else:
-            return int(ord(value))
-
         # Parse valid start session response
         response = MilightWifiBridge.__START_SESSION_RESPONSE(responseReceived=True,
-                                                              mac=str("{}:{}:{}:{}:{}:{}".format(getHexaStringFromUnicode(data[7]),
-                                                                                                 getHexaStringFromUnicode(data[8]),
-                                                                                                 getHexaStringFromUnicode(data[9]),
-                                                                                                 getHexaStringFromUnicode(data[10]),
-                                                                                                 getHexaStringFromUnicode(data[11]),
-                                                                                                 getHexaStringFromUnicode(data[12]))),
-                                                              sessionId1=getIntFromUnicode(data[19]),
-                                                              sessionId2=getIntFromUnicode(data[20]))
+                                                              mac=str("{}:{}:{}:{}:{}:{}".format(format(MilightWifiBridge.__getStringFromUnicode(data[7]), 'x'),
+                                                                                                 format(MilightWifiBridge.__getStringFromUnicode(data[8]), 'x'),
+                                                                                                 format(MilightWifiBridge.__getStringFromUnicode(data[9]), 'x'),
+                                                                                                 format(MilightWifiBridge.__getStringFromUnicode(data[10]), 'x'),
+                                                                                                 format(MilightWifiBridge.__getStringFromUnicode(data[11]), 'x'),
+                                                                                                 format(MilightWifiBridge.__getStringFromUnicode(data[12]), 'x'))),
+                                                              sessionId1=int(MilightWifiBridge.__getStringFromUnicode(data[19])),
+                                                              sessionId2=int(MilightWifiBridge.__getStringFromUnicode(data[20])))
         logging.debug("Start session (mac address: {}, session ID 1: {}, session ID 2: {})"
                       .format(str(response.mac), str(response.sessionId1), str(response.sessionId2)))
       else:
@@ -429,7 +423,7 @@ class MilightWifiBridge:
             # Receive response frame
             data = self.__sock.recvfrom(64)[0]
             if len(data) == 8:
-              if data[6] == self.__sequence_number:
+              if int(MilightWifiBridge.__getStringFromUnicode(data[6])) == self.__sequence_number:
                 returnValue = True
                 logging.debug("Received valid response for previously sent request")
               else:
