@@ -7,7 +7,7 @@ This python library is designed to be integrated in python or shell projects usi
 
 It is multi-platform and compatible with python 2.7+ and 3+.
 
-<img src="milight.jpg" width="800">
+<img src="https://github.com/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library/raw/master/milight.jpg" width="800">
 
 ## Functionalities
 
