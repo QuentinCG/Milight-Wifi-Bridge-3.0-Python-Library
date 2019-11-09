@@ -29,8 +29,8 @@ __author__ = 'Quentin Comte-Gaz'
 __email__ = "quentin@comte-gaz.com"
 __license__ = "MIT License"
 __copyright__ = "Copyright Quentin Comte-Gaz (2019)"
-__python_version__ = "3.+"
-__version__ = "1.1 (2019/06/17)"
+__python_version__ = "2.7+ and 3.+"
+__version__ = "2.0 (2019/11/09)"
 __status__ = "Usable for any project"
 
 import socket

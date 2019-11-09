@@ -6,7 +6,7 @@ with io.open('README.md', 'r', encoding='utf-8') as readme_file:
 
 setup(
     name='MilightWifiBridge',
-    version='1.0',
+    version='2.0',
     description='Milight Wifi Bridge 3.0 controller for LimitlessLED Wifi Bridge v6.0 protocol (Light ON/OFF, change color/mode/brightness/saturation, link/unlink)',
     long_description=readme,
     url='https://github.com/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library',
@@ -24,6 +24,7 @@ setup(
         'Operating System :: POSIX :: Linux',
         'Operating System :: MacOS X',
         'Natural Language :: English',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
