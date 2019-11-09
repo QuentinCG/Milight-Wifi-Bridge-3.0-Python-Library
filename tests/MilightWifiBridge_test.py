@@ -752,7 +752,7 @@ class TestMilightWifiBridge(unittest.TestCase):
                                  '--unlink',
                                  '--turnOn',
                                 ]))
-    self.assertEqual(cm.exception.code, 0)
+    self.assertNotEqual(cm.exception.code, 0)
     self.assertTrue("Link zone 2: True" in std_output)
     self.assertTrue("Unlink zone 2: False" in std_output)
     self.assertTrue("[ERROR] Request failed" in std_output)
