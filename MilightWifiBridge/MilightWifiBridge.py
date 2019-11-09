@@ -297,7 +297,7 @@ class MilightWifiBridge:
   def __getStringFromUnicode(value):
     try:
       return ord(value)
-    except:
+    except Exception:
       return value
 
   ################################### INIT ####################################
