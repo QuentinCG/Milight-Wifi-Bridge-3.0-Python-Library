@@ -647,6 +647,7 @@ class TestMilightWifiBridge(unittest.TestCase):
   def test_all_cmd_request_except_help_cmd(self):
     logging.debug("test_all_cmd_request_except_help_cmd")
 
+    # Request to do "everything" from cmd (except get mac address)
     MockSocket.initializeMockAndMilight([
                                            BasicCommandRequest.LINK_CMD,
                                            BasicCommandRequest.UNLINK_CMD,
@@ -680,11 +681,9 @@ class TestMilightWifiBridge(unittest.TestCase):
                                            True, True, True, True, True, True, True, True,
                                            True, True, True, True, True, True, True, True, True,
                                          ])
-
-    # Request failed because nothing requested
     with self.assertRaises(SystemExit) as cm:
       with CapturingStdOut() as std_output:
-        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2',
                                  '--link',
                                  '--unlink',
                                  '--turnOn',
@@ -734,6 +733,30 @@ class TestMilightWifiBridge(unittest.TestCase):
     self.assertTrue('Set saturation 50% to zone 2: True' in std_output)
     self.assertTrue('Set temperature 25% to zone 2: True' in std_output)
 
+    # Get mac address from cmd
+    MockSocket.initializeMock([
+      {'IN': bytearray([0x20,0x00,0x00,0x00,0x16,0x02,0x62,0x3a,0xd5,0xed,0xa3,0x01,0xae,
+                        0x08,0x2d,0x46,0x61,0x41,0xa7,0xf6,0xdc,0xaf,0xd3,0xe6,0x00,0x00,0x1e])},
+      {'OUT': bytearray([0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x10,0x11,0x12,0x13,0x14,
+                         0x15,0x16,0x17,0x18,0x19,0x20,0x21,0x22])},
+    ])
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1',
+                                 '--getMacAddress',
+                                ]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Mac address: 8:9:10:11:12:13" in std_output)
+
+    MockSocket.initializeMock([])
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1',
+                                 '--getMacAddress',
+                                ]))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue("Failed to get mac address" in std_output)
+
     # Error returned by the device
     MockSocket.initializeMockAndMilight([
                                            BasicCommandRequest.LINK_CMD,
@@ -747,7 +770,7 @@ class TestMilightWifiBridge(unittest.TestCase):
                                          ])
     with self.assertRaises(SystemExit) as cm:
       with CapturingStdOut() as std_output:
-        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2',
                                  '--link',
                                  '--unlink',
                                  '--turnOn',
@@ -760,7 +783,7 @@ class TestMilightWifiBridge(unittest.TestCase):
     # Invalid input
     with self.assertRaises(SystemExit) as cm:
       with CapturingStdOut() as std_output:
-        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2',
                                  '--setColorBridgeLamp', '700',
                                 ]))
     self.assertNotEqual(cm.exception.code, 0)
@@ -768,7 +791,7 @@ class TestMilightWifiBridge(unittest.TestCase):
 
     with self.assertRaises(SystemExit) as cm:
       with CapturingStdOut() as std_output:
-        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2',
                                  '--setBrightnessBridgeLamp', '101',
                                 ]))
     self.assertNotEqual(cm.exception.code, 0)
@@ -776,7 +799,7 @@ class TestMilightWifiBridge(unittest.TestCase):
 
     with self.assertRaises(SystemExit) as cm:
       with CapturingStdOut() as std_output:
-        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2',
                                  '--setDiscoModeBridgeLamp', '10',
                                 ]))
     self.assertNotEqual(cm.exception.code, 0)
@@ -784,7 +807,7 @@ class TestMilightWifiBridge(unittest.TestCase):
 
     with self.assertRaises(SystemExit) as cm:
       with CapturingStdOut() as std_output:
-        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2',
                                  '--setDiscoMode', '10',
                                 ]))
     self.assertNotEqual(cm.exception.code, 0)
@@ -792,7 +815,7 @@ class TestMilightWifiBridge(unittest.TestCase):
 
     with self.assertRaises(SystemExit) as cm:
       with CapturingStdOut() as std_output:
-        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2',
                                  '--setColor', '700',
                                 ]))
     self.assertNotEqual(cm.exception.code, 0)
@@ -800,7 +823,7 @@ class TestMilightWifiBridge(unittest.TestCase):
 
     with self.assertRaises(SystemExit) as cm:
       with CapturingStdOut() as std_output:
-        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2',
                                  '--setBrightness', '101',
                                 ]))
     self.assertNotEqual(cm.exception.code, 0)
@@ -808,7 +831,7 @@ class TestMilightWifiBridge(unittest.TestCase):
 
     with self.assertRaises(SystemExit) as cm:
       with CapturingStdOut() as std_output:
-        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2',
                                  '--setSaturation', '101',
                                 ]))
     self.assertNotEqual(cm.exception.code, 0)
@@ -816,7 +839,7 @@ class TestMilightWifiBridge(unittest.TestCase):
 
     with self.assertRaises(SystemExit) as cm:
       with CapturingStdOut() as std_output:
-        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2',
                                  '--setTemperature', '101',
                                 ]))
     self.assertNotEqual(cm.exception.code, 0)
