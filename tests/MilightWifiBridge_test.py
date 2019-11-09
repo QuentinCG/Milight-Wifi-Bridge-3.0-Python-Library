@@ -447,6 +447,11 @@ class TestMilightWifiBridge(unittest.TestCase):
 
     with self.assertRaises(SystemExit) as cm:
       with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((['--undefinedParam']))
+    self.assertNotEqual(cm.exception.code, 0)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
         MilightWifiBridge.main(('--ip', '127.0.0.1', '--port', '-4'))
     self.assertNotEqual(cm.exception.code, 0)
     self.assertTrue("[ERROR] You need to specify a valid port (more than 0)" in std_output)
@@ -728,6 +733,94 @@ class TestMilightWifiBridge(unittest.TestCase):
     self.assertTrue('Set brightness 75% to zone 2: True' in std_output)
     self.assertTrue('Set saturation 50% to zone 2: True' in std_output)
     self.assertTrue('Set temperature 25% to zone 2: True' in std_output)
+
+    # Error returned by the device
+    MockSocket.initializeMockAndMilight([
+                                           BasicCommandRequest.LINK_CMD,
+                                           BasicCommandRequest.UNLINK_CMD,
+                                         ],
+                                         [
+                                           2, 2
+                                         ],
+                                         [
+                                           True, False
+                                         ])
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+                                 '--link',
+                                 '--unlink',
+                                 '--turnOn',
+                                ]))
+    self.assertEqual(cm.exception.code, 0)
+    self.assertTrue("Link zone 2: True" in std_output)
+    self.assertTrue("Unlink zone 2: False" in std_output)
+    self.assertTrue("[ERROR] Request failed" in std_output)
+
+    # Invalid input
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+                                 '--setColorBridgeLamp', '700',
+                                ]))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue('[ERROR] Color must be between 0 and 255' in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+                                 '--setBrightnessBridgeLamp', '101',
+                                ]))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue('[ERROR] Brightness must be between 0 and 100 (in %)' in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+                                 '--setDiscoModeBridgeLamp', '10',
+                                ]))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue('[ERROR] Disco mode must be between 1 and 9' in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+                                 '--setDiscoMode', '10',
+                                ]))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue('[ERROR] Disco mode must be between 1 and 9' in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+                                 '--setColor', '700',
+                                ]))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue('[ERROR] Color must be between 0 and 255' in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+                                 '--setBrightness', '101',
+                                ]))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue('[ERROR] Brightness must be between 0 and 100 (in %)' in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+                                 '--setSaturation', '101',
+                                ]))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue('[ERROR] Saturation must be between 0 and 100 (in %)' in std_output)
+
+    with self.assertRaises(SystemExit) as cm:
+      with CapturingStdOut() as std_output:
+        MilightWifiBridge.main((['--debug', '--ip', '127.0.0.1', '--zone', '2', '--debug',
+                                 '--setTemperature', '101',
+                                ]))
+    self.assertNotEqual(cm.exception.code, 0)
+    self.assertTrue('[ERROR] Temperature must be between 0 and 100 (in %)' in std_output)
 
 if __name__ == '__main__':
   logger = logging.getLogger()
