@@ -23,7 +23,7 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX :: Linux',
-        'Operating System :: MacOS X',
+        'Operating System :: MacOS',
         'Natural Language :: English',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
