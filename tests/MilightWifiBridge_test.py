@@ -118,6 +118,9 @@ class MockSocket:
   def settimeout(self, timeout_sec):
     return
 
+  def send(self, data):
+    return self.sendto(data, None)
+
   def sendto(self, data, addr):
     if len(MockSocket.__read_write) > 0:
       if 'IN' in MockSocket.__read_write[0]:
