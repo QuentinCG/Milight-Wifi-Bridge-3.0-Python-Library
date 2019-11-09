@@ -1157,102 +1157,146 @@ def main(parsed_args = sys.argv[1:]):
       macAddress = milight.getMacAddress()
       returnValue &= (macAddress != "")
       if macAddress != "":
-        print(str(macAddress))
+        print("Mac address: "+str(macAddress))
+      else:
+        print("Failed to get mac address")
     elif o in ("-l", "--link"):
       atLeastOneRequestDone = True
-      returnValue &= milight.link(zoneId=zone)
+      res = milight.link(zoneId=zone)
+      returnValue &= res
+      print("Link zone "+str(zone)+": "+str(res))
     elif o in ("-u", "--unlink"):
       atLeastOneRequestDone = True
-      returnValue &= milight.unlink(zoneId=zone)
+      res = milight.unlink(zoneId=zone)
+      returnValue &= res
+      print("Unlink zone "+str(zone)+": "+str(res))
     elif o in ("-o", "--turnOn"):
       atLeastOneRequestDone = True
-      returnValue &= milight.turnOn(zoneId=zone)
+      res = milight.turnOn(zoneId=zone)
+      returnValue &= res
+      print("Turn on zone "+str(zone)+": "+str(res))
     elif o in ("-f", "--turnOff"):
       atLeastOneRequestDone = True
-      returnValue &= milight.turnOff(zoneId=zone)
+      res = milight.turnOff(zoneId=zone)
+      returnValue &= res
+      print("Turn off zone "+str(zone)+": "+str(res))
     elif o in ("-x", "--turnOnWifiBridgeLamp"):
       atLeastOneRequestDone = True
       returnValue &= milight.turnOnWifiBridgeLamp()
+      returnValue &= res
+      print("Turn on wifi bridge lamp: "+str(res))
     elif o in ("-y", "--turnOffWifiBridgeLamp"):
       atLeastOneRequestDone = True
-      returnValue &= milight.turnOffWifiBridgeLamp()
+      res = milight.turnOffWifiBridgeLamp()
+      returnValue &= res
+      print("Turn off wifi bridge lamp: "+str(res))
     elif o in ("-j", "--setWhiteModeBridgeLamp"):
       atLeastOneRequestDone = True
-      returnValue &= milight.setWhiteModeBridgeLamp()
+      res = milight.setWhiteModeBridgeLamp()
+      returnValue &= res
+      print("Set white mode to wifi bridge: "+str(res))
     elif o in ("-k", "--speedUpDiscoModeBridgeLamp"):
       atLeastOneRequestDone = True
-      returnValue &= milight.speedUpDiscoModeBridgeLamp()
+      res = milight.speedUpDiscoModeBridgeLamp()
+      returnValue &= res
+      print("Speed up disco mode to wifi bridge: "+str(res))
     elif o in ("-q", "--slowDownDiscoModeBridgeLamp"):
       atLeastOneRequestDone = True
-      returnValue &= milight.slowDownDiscoModeBridgeLamp()
+      res = milight.slowDownDiscoModeBridgeLamp()
+      returnValue &= res
+      print("Slow down disco mode to wifi bridge: "+str(res))
     elif o in ("-r", "--setColorBridgeLamp"):
       userColor = int(a)
       if userColor < 0 or userColor > 255:
         print("[ERROR] Color must be between 0 and 255")
         sys.exit(2)
       atLeastOneRequestDone = True
-      returnValue &= milight.setColorBridgeLamp(color=userColor)
+      res = milight.setColorBridgeLamp(color=userColor)
+      returnValue &= res
+      print("Set color "+str(userColor)+" to wifi bridge: "+str(res))
     elif o in ("-v", "--setBrightnessBridgeLamp"):
       userBrightness = int(a)
       if userBrightness < 0 or userBrightness > 100:
         print("[ERROR] Brightness must be between 0 and 100 (in %)")
         sys.exit(2)
       atLeastOneRequestDone = True
-      returnValue &= milight.setBrightnessBridgeLamp(brightness=userBrightness)
+      res = milight.setBrightnessBridgeLamp(brightness=userBrightness)
+      returnValue &= res
+      print("Set brightness "+str(userBrightness)+"% to the wifi bridge: "+str(res))
     elif o in ("-1", "--setDiscoModeBridgeLamp"):
       mode = int(a)
       if mode < 1 or mode > 9:
         print("[ERROR] Disco mode must be between 1 and 9")
         sys.exit(2)
       atLeastOneRequestDone = True
-      returnValue &= milight.setDiscoModeBridgeLamp(discoMode=mode)
+      res = milight.setDiscoModeBridgeLamp(discoMode=mode)
+      returnValue &= res
+      print("Set disco mode "+str(mode)+" to wifi bridge: "+str(res))
     elif o in ("-n", "--setNightMode"):
       atLeastOneRequestDone = True
-      returnValue &= milight.setNightMode(zoneId=zone)
+      res = milight.setNightMode(zoneId=zone)
+      returnValue &= res
+      print("Set night mode to zone "+str(zone)+": "+str(res))
     elif o in ("-w", "--setWhiteMode"):
       atLeastOneRequestDone = True
-      returnValue &= milight.setWhiteMode(zoneId=zone)
+      res = milight.setWhiteMode(zoneId=zone)
+      returnValue &= res
+      print("Set white mode to zone "+str(zone)+": "+str(res))
     elif o in ("-a", "--speedUpDiscoMode"):
       atLeastOneRequestDone = True
-      returnValue &= milight.speedUpDiscoMode(zoneId=zone)
+      res = milight.speedUpDiscoMode(zoneId=zone)
+      returnValue &= res
+      print("Speed up disco mode to zone "+str(zone)+": "+str(res))
     elif o in ("-g", "--slowDownDiscoMode"):
       atLeastOneRequestDone = True
-      returnValue &= milight.slowDownDiscoMode(zoneId=zone)
+      res = milight.slowDownDiscoMode(zoneId=zone)
+      returnValue &= res
+      print("Slow down disco mode to zone "+str(zone)+": "+str(res))
     elif o in ("-d", "--setDiscoMode"):
       mode = int(a)
       if mode < 1 or mode > 9:
         print("[ERROR] Disco mode must be between 1 and 9")
         sys.exit(2)
       atLeastOneRequestDone = True
-      returnValue &= milight.setDiscoMode(discoMode=mode, zoneId=zone)
+      res = milight.setDiscoMode(discoMode=mode, zoneId=zone)
+      returnValue &= res
+      print("Set disco mode "+str(mode)+" to zone "+str(zone)+": "+str(res))
     elif o in ("-c", "--setColor"):
       userColor = int(a)
       if userColor < 0 or userColor > 255:
         print("[ERROR] Color must be between 0 and 255")
         sys.exit(2)
       atLeastOneRequestDone = True
-      returnValue &= milight.setColor(color=userColor, zoneId=zone)
+      res = milight.setColor(color=userColor, zoneId=zone)
+      returnValue &= res
+      print("Set color "+str(userColor)+" to zone "+str(zone)+": "+str(res))
     elif o in ("-b", "--setBrightness"):
       userBrightness = int(a)
       if userBrightness < 0 or userBrightness > 100:
         print("[ERROR] Brightness must be between 0 and 100 (in %)")
         sys.exit(2)
       atLeastOneRequestDone = True
-      returnValue &= milight.setBrightness(brightness=userBrightness, zoneId=zone)
+      res = milight.setBrightness(brightness=userBrightness, zoneId=zone)
+      returnValue &= res
+      print("Set brightness "+str(userBrightness)+"% to zone "+str(zone)+": "+str(res))
     elif o in ("-s", "--setSaturation"):
       userSaturation = int(a)
       if userSaturation < 0 or userSaturation > 100:
         print("[ERROR] Saturation must be between 0 and 100 (in %)")
         sys.exit(2)
       atLeastOneRequestDone = True
-      returnValue &= milight.setSaturation(saturation=userSaturation, zoneId=zone)
+      res = milight.setSaturation(saturation=userSaturation, zoneId=zone)
+      returnValue &= res
+      print("Set saturation "+str(userSaturation)+"% to zone "+str(zone)+": "+str(res))
     elif o in ("-e", "--setTemperature"):
       userTemperature = int(a)
       if userTemperature < 0 or userTemperature > 100:
         print("[ERROR] Temperature must be between 0 and 100 (in %)")
         sys.exit(2)
       atLeastOneRequestDone = True
-      returnValue &= milight.setTemperature(temperature=userTemperature, zoneId=zone)
+      res = milight.setTemperature(temperature=userTemperature, zoneId=zone)
+      returnValue &= res
+      print("Set temperature "+str(userTemperature)+"% to zone "+str(zone)+": "+str(res))
 
     # In case an error occured in any of the request, stop the program
     if not returnValue:
