@@ -353,23 +353,35 @@ class MilightWifiBridge:
     data_to_send = MilightWifiBridge.__START_SESSION_MSG
     logging.debug("Sending frame '{}' to {}:{}".format(str(binascii.hexlify(data_to_send)),
                                                      str(self.__ip), str(self.__port)))
-    self.__sock.sendto(data_to_send, (self.__ip, self.__port))
+    self.__sock.send(data_to_send)
     response = MilightWifiBridge.__START_SESSION_RESPONSE(responseReceived=False, mac="", sessionId1=-1, sessionId2=-1)
 
     try:
       # Receive start session response
       data = self.__sock.recvfrom(1024)[0]
       if len(data) == 22:
+        def getHexaStringFromUnicode(value):
+          if sys.version_info >= (3,):
+            return format(value, 'x')
+          else:
+            return format(ord(value), 'x')
+
+        def getIntFromUnicode(value):
+          if sys.version_info >= (3,):
+            return int(value)
+          else:
+            return int(ord(value))
+
         # Parse valid start session response
         response = MilightWifiBridge.__START_SESSION_RESPONSE(responseReceived=True,
-                                                              mac=str("{}:{}:{}:{}:{}:{}".format(format(data[7], 'x'),
-                                                                                                 format(data[8], 'x'),
-                                                                                                 format(data[9], 'x'),
-                                                                                                 format(data[10], 'x'),
-                                                                                                 format(data[11], 'x'),
-                                                                                                 format(data[12], 'x'))),
-                                                              sessionId1=int(data[19]),
-                                                              sessionId2=int(data[20]))
+                                                              mac=str("{}:{}:{}:{}:{}:{}".format(getHexaStringFromUnicode(data[7]),
+                                                                                                 getHexaStringFromUnicode(data[8]),
+                                                                                                 getHexaStringFromUnicode(data[9]),
+                                                                                                 getHexaStringFromUnicode(data[10]),
+                                                                                                 getHexaStringFromUnicode(data[11]),
+                                                                                                 getHexaStringFromUnicode(data[12]))),
+                                                              sessionId1=getIntFromUnicode(data[19]),
+                                                              sessionId2=getIntFromUnicode(data[20]))
         logging.debug("Start session (mac address: {}, session ID 1: {}, session ID 2: {})"
                       .format(str(response.mac), str(response.sessionId1), str(response.sessionId2)))
       else:
@@ -412,7 +424,7 @@ class MilightWifiBridge:
           logging.debug("Sending request with command '{}' with session ID 1 '{}', session ID 2 '{}' and sequence number '{}'"
                         .format(str(binascii.hexlify(command)), str(startSessionResponse.sessionId1),
                                 str(startSessionResponse.sessionId2), str(self.__sequence_number)))
-          self.__sock.sendto(bytesToSend, (self.__ip, self.__port))
+          self.__sock.send(bytesToSend)
           try:
             # Receive response frame
             data = self.__sock.recvfrom(64)[0]
@@ -1182,7 +1194,7 @@ def main(parsed_args = sys.argv[1:]):
       print("Turn off zone "+str(zone)+": "+str(res))
     elif o in ("-x", "--turnOnWifiBridgeLamp"):
       atLeastOneRequestDone = True
-      returnValue &= milight.turnOnWifiBridgeLamp()
+      res = milight.turnOnWifiBridgeLamp()
       returnValue &= res
       print("Turn on wifi bridge lamp: "+str(res))
     elif o in ("-y", "--turnOffWifiBridgeLamp"):
