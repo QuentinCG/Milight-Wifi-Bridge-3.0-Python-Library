@@ -1,5 +1,5 @@
 # Milight Wifi Bridge 3.0 Python library
-[![Build Status](https://travis-ci.org/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library.svg?branch=master)](https://travis-ci.org/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library) [![codecov](https://codecov.io/gh/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library/branch/master/graph/badge.svg)](https://codecov.io/gh/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/171affbf02ea46d891765c2d39c56ce2)](https://www.codacy.com/manual/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library&amp;utm_campaign=Badge_Grade) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library/blob/master/LICENSE) [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/QuentinCG)
+[![PyPI version](https://badge.fury.io/py/MilightWifiBridge.svg)](https://badge.fury.io/py/MilightWifiBridge) [![Build Status](https://travis-ci.org/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library.svg?branch=master)](https://travis-ci.org/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library) [![codecov](https://codecov.io/gh/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library/branch/master/graph/badge.svg)](https://codecov.io/gh/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/171affbf02ea46d891765c2d39c56ce2)](https://www.codacy.com/manual/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library&amp;utm_campaign=Badge_Grade) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/QuentinCG/Milight-Wifi-Bridge-3.0-Python-Library/blob/master/LICENSE) [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/QuentinCG)
 
 ## What is it
 
@@ -45,7 +45,7 @@ Non-exhaustive list of shell commands:
 - Load your shell or python script
 
 Note:
-- You can install this library as a package using `python setup.py install` command in root folder.
+- You can install this library as a package using `pip install MilightWifiBridge` (or `python setup.py install` command in root folder).
 - You can launch unit-test using `python setup.py test` command in root folder.
 
 ## How to use in shell
