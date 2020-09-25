@@ -42,6 +42,7 @@ Non-exhaustive list of shell commands:
 
 - Connect your Milight 3.0 wifi bridge to your wifi network (install the android app and follow the instruction: <https://play.google.com/store/apps/details?id=com.irainxun.wifilight>)
 - Get IP address and port of the wifi bridge (ip can be found from your internet box, default port is 5987)
+- Be sure the PC is linked to your wifi bridge (light on the bulbs max 3sec before calling `python3 MilightWifiBridge.py --ip 192.168.1.23 --zone 1 --link`)
 - Load your shell or python script
 
 Note:
